@@ -1,0 +1,82 @@
+[
+  {
+    "id": 5,
+    "type": {
+      "id": 195,
+      "shortname": "lis_195",
+      "is_default": false,
+      "label_fr": "Assemblée Générale",
+      "hidden": false,
+      "_links": {
+        "self": {
+          "href": "/api/v4/listitems/lis_195"
+        },
+        "list": {
+          "href": "/api/v4/lists/44"
+        }
+      },
+      "entity_type": "list_item"
+    },
+    "title": "Assemblée Générale 2017",
+    "description": "",
+    "event_organizer": "François POUTAS",
+    "start_date": "2017-09-28T00:00:00+0200",
+    "closed_date": "2017-10-25T00:00:00+0200",
+    "status": "ec_status_running",
+    "date_creation": "2017-09-28T16:17:39+0200",
+    "date_update": "2017-09-29T08:15:47+0200",
+    "_links": {
+      "creator": {
+        "href": "/api/v4/eventcampaigns/5/creator"
+      },
+      "invitations": {
+        "href": "/api/v4/eventcampaigns/5/invitations"
+      },
+      "images": {
+        "href": "/api/v4/eventcampaigns/5/images"
+      }
+    },
+    "entity_type": "event_campaign"
+  },
+  {
+    "id": 10,
+    "type": {
+      "id": 194,
+      "shortname": "lis_194",
+      "is_default": false,
+      "label_fr": "Colloques",
+      "hidden": false,
+      "_links": {
+        "self": {
+          "href": "/api/v4/listitems/lis_194"
+        },
+        "list": {
+          "href": "/api/v4/lists/44"
+        }
+      },
+      "entity_type": "list_item"
+    },
+    "title": "ETUDE INNOVATION CIGREF 2017",
+    "subtitle": "L’OPEN INNOVATION",
+    "description": "L’open innovation, une réponse aux challenges de l’entreprise Le CIGREF publie l’étude réalisée à partir des travaux de son groupe de travail « Innovation en action » : « L’open innovation : une réponse aux challenges de l’entreprise ». ",
+    "event_date": "15 Octobre 2017",
+    "event_place": "Paris",
+    "start_date": "2017-10-09T10:00:00+0200",
+    "closed_date": "2017-10-15T18:00:00+0200",
+    "status": "ec_status_ended",
+    "date_creation": "2017-09-29T12:54:10+0200",
+    "date_update": "2017-10-15T18:00:24+0200",
+    "_links": {
+      "creator": {
+        "href": "/api/v4/eventcampaigns/10/creator"
+      },
+      "invitations": {
+        "href": "/api/v4/eventcampaigns/10/invitations"
+      },
+      "images": {
+        "href": "/api/v4/eventcampaigns/10/images"
+      }
+    },
+    "entity_type": "event_campaign"
+  }
+]

@@ -43,9 +43,9 @@ public class EventTabAdapter extends FragmentPagerAdapter {
         switch(position){
             case 0 :
                 return ctxt.getResources().getString(R.string.title_event_bydate);
+//            case 1 :
+//                return ctxt.getResources().getString(R.string.title_event_bytheme);
             case 1 :
-                return ctxt.getResources().getString(R.string.title_event_bytheme);
-            case 2 :
                 return ctxt.getResources().getString(R.string.title_event_bypopularity);
         }
         return null;
