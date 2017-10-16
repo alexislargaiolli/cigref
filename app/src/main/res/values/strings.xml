@@ -20,4 +20,7 @@
     <string name="title_events">Événements</string>
     <string name="title_agenda">Agenda</string>
     <string name="title_profile">Mes inscriptions</string>
+    <string name="title_event_bydate">Par date</string>
+    <string name="title_event_bypopularity">Par popularité</string>
+    <string name="title_event_bytheme" >Par thèmes</string>
 </resources>

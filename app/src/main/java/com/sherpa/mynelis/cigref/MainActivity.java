@@ -1,14 +1,13 @@
 package com.sherpa.mynelis.cigref;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.view.MenuItem;
-import android.view.View;
+
+import com.sherpa.mynelis.cigref.events.EventsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         changeFragment(new EventsFragment(), getResources().getString(R.string.title_events));
-
 
     }
 
@@ -50,5 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
     }
+
+
 
 }
