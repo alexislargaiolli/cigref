@@ -23,4 +23,8 @@
     <string name="title_event_bypopularity">Par popularité</string>
     <string name="title_event_bytheme" >Par thèmes</string>
     <string name="event_guest_count">%1$d DSI inscrits, et vous ?</string>
+    <string name="profil_logout">Me déconnecter</string>
+    <string name="profil_logout_confirm">Se déconnecter ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 </resources>
