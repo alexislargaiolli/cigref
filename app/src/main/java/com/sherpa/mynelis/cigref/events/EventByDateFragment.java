@@ -45,7 +45,6 @@ public class EventByDateFragment extends Fragment {
 
         // specify an adapter (see also next example)
         mAdapter = new EventAdpader(myDataset);
-        mAdapter.setGuestCountPattern(getString(R.string.event_guest_count));
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

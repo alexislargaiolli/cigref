@@ -80,7 +80,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/eventDay"
+                            android:id="@+id/eventMonth"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
                             android:layout_weight="1"
@@ -89,7 +89,7 @@
                             android:textColor="@color/colorPrimary" />
 
                         <TextView
-                            android:id="@+id/eventMonth"
+                            android:id="@+id/eventDay"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_weight="1"
