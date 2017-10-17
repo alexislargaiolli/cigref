@@ -8,6 +8,15 @@
     android:orientation="vertical"
     tools:context="com.sherpa.mynelis.cigref.MainActivity">
 
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/my_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:elevation="4dp"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+        <!--app:titleTextColor="@android:color/white" />-->
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
