@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sherpa.mynelis.cigref.EventServices;
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.model.Event;
+import com.sherpa.mynelis.cigref.model.EventFactory;
 
 
 /**
@@ -21,10 +24,10 @@ public class EventByPopularityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String[] myDataset = new String[]{"item1", "item2", "item3"};
+    private Event[] myDataset;
 
     public EventByPopularityFragment() {
-        // Required empty public constructor
+        myDataset = EventFactory.createEvents(4);
     }
 
 
@@ -46,6 +49,17 @@ public class EventByPopularityFragment extends Fragment {
         // specify an adapter (see also next example)
         mAdapter = new EventAdpader(myDataset);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setEventListener(new EventAdpader.EventListener() {
+            @Override
+            public void onEventSelected(Event eventCampaign) {
+                EventServices.goToEventDetail(getContext(), eventCampaign);
+            }
+
+            @Override
+            public void onInvitationStatusChanged(Event eventCampaign, boolean accepted) {
+
+            }
+        });
 
         return view;
     }

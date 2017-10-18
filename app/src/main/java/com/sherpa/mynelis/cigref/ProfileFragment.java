@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.sherpa.mynelis.cigref.events.EventAdpader;
+import com.sherpa.mynelis.cigref.model.Event;
+import com.sherpa.mynelis.cigref.model.EventFactory;
 
 
 /**
@@ -24,10 +26,10 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String[] myDataset = new String[]{"item1", "item2", "item3"};
+    private Event[] myDataset;
 
     public ProfileFragment() {
-        // Required empty public constructor
+        myDataset = EventFactory.createEvents(4);
     }
 
 

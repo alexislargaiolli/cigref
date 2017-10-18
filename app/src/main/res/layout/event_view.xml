@@ -40,7 +40,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
+                    android:gravity="center_vertical|end"
                     android:orientation="horizontal">
 
                     <TextView
@@ -48,14 +49,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:text="@string/event_guest_count" />
+                        android:text="@string/event_guest_count"
+                        android:textAlignment="textEnd" />
 
                     <ImageButton
                         android:id="@+id/noButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
                         android:background="@android:color/white"
                         card_view:srcCompat="@mipmap/ic_no_off" />
 
@@ -63,7 +66,6 @@
                         android:id="@+id/yesButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:background="@android:color/white"
                         card_view:srcCompat="@mipmap/ic_yes_off" />
                 </LinearLayout>
