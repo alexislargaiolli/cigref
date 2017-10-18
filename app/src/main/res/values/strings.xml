@@ -48,4 +48,5 @@
     <string name="transfert_mail_content_plain">Bonjour,\n\nJe pense que cet événement du CIGREF pourrait vous intéresser : \n\n%1$s\n\n%2$s\n\nLieu : %3$s \n\nDate : %4$s \n\nPour demander à vous inscrire à cet événement contactez le CIGREF à l’adresse suivante : cigref@cigref.fr</string>
     <string name="transfert_mail_title">Invitation événement %1$s</string>
     <string name="transfert_mail_chooser">Envoyer un email avec :</string>
+    <string name="add_to_calandar_success">L\'événement a été ajouté à votre calendrier.</string>
 </resources>

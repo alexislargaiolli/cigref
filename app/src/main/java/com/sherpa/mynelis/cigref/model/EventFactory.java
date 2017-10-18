@@ -3,6 +3,7 @@ package com.sherpa.mynelis.cigref.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +50,8 @@ public class EventFactory implements Serializable {
                 eventAddress,
                 eventDate,
                 cigrefUser,
-                "Montpellier"
+                "Montpellier",
+                new Date()
         );
     }
 

@@ -1,6 +1,7 @@
 package com.sherpa.mynelis.cigref.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,10 +16,10 @@ public class Event implements Serializable{
     private List<CigrefUser> mParticpantsList; //Todo: change with real model
     private int mRegisterState;
     private String mDescription;
-
     private String eventPlace;
     private EventAddress mEventAdress;
     private EventDate mEventDate;
+    private Date startDate;
     private CigrefUser mAnimator;
 
     public Event(
@@ -32,7 +33,8 @@ public class Event implements Serializable{
             EventAddress mEventAdress,
             EventDate mEventDate,
             CigrefUser mAnimator,
-            String eventPlace
+            String eventPlace,
+            Date startDate
     ) {
         this.mId = mId;
         this.mImageUrl = mImageUrl;
@@ -45,6 +47,7 @@ public class Event implements Serializable{
         this.mEventDate = mEventDate;
         this.mAnimator = mAnimator;
         this.eventPlace = eventPlace;
+        this.startDate = startDate;
     }
 
     public String getFormattedAddress(){
@@ -109,4 +112,13 @@ public class Event implements Serializable{
     public void setEventPlace(String eventPlace) {
         this.eventPlace = eventPlace;
     }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 }
+

@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.sherpa.mynelis.cigref.EventServices;
 import com.sherpa.mynelis.cigref.R;
 
 /**
@@ -18,6 +20,12 @@ public class InvitationFragment extends Fragment {
     public static String BACK_STACK_OPENED_NAME = "invation_opened";
 
     private View mRootView;
+
+    private InvitationEvent invitationEvent;
+
+    public interface InvitationEvent{
+        public void onAddToCalendar();
+    }
 
     public InvitationFragment() {
         // Required empty public constructor
@@ -41,7 +49,9 @@ public class InvitationFragment extends Fragment {
         addToCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO add to calendar
+            if(invitationEvent != null){
+                invitationEvent.onAddToCalendar();
+            }
             }
         });
     }
@@ -62,6 +72,14 @@ public class InvitationFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public InvitationEvent getInvitationEvent() {
+        return invitationEvent;
+    }
+
+    public void setInvitationEvent(InvitationEvent invitationEvent) {
+        this.invitationEvent = invitationEvent;
     }
 
 }
