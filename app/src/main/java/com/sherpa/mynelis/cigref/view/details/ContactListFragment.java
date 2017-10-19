@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.details;
+package com.sherpa.mynelis.cigref.view.details;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

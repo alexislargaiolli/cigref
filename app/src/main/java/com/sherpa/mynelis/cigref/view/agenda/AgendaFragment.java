@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.agenda;
+package com.sherpa.mynelis.cigref.view.agenda;
 
 
 import android.os.Bundle;
@@ -11,17 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.events.EventAdpader;
+import com.sherpa.mynelis.cigref.view.events.EventAdpader;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 

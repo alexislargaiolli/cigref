@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.events;
+package com.sherpa.mynelis.cigref.view.events;
 
 
 import android.os.Bundle;

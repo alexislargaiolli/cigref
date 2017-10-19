@@ -1,22 +1,20 @@
-package com.sherpa.mynelis.cigref;
+package com.sherpa.mynelis.cigref.service;
 
-import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
 
-import com.sherpa.mynelis.cigref.details.EventDetailsActivity;
-import com.sherpa.mynelis.cigref.details.EventDetailsFragment;
+import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.view.details.EventDetailsActivity;
+import com.sherpa.mynelis.cigref.view.details.EventDetailsFragment;
 import com.sherpa.mynelis.cigref.model.Event;
 
 import java.util.TimeZone;
 
 /**
- * Created by jacques on 18/10/2017.
+ * Created by Alexis Largaiolli on 18/10/2017.
  */
 public class EventServices {
 

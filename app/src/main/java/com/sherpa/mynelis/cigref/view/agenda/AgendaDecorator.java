@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.agenda;
+package com.sherpa.mynelis.cigref.view.agenda;
 
 import android.graphics.Color;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by jacques on 17/10/2017.
+ * Created by Alexis Largaiolli on 17/10/2017.
  */
 
 public class AgendaDecorator implements DayViewDecorator {

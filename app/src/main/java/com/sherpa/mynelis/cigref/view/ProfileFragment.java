@@ -1,7 +1,8 @@
-package com.sherpa.mynelis.cigref;
+package com.sherpa.mynelis.cigref.view;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.sherpa.mynelis.cigref.events.EventAdpader;
+import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.service.AuthenticationService;
+import com.sherpa.mynelis.cigref.view.events.EventAdpader;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
 
@@ -83,7 +86,9 @@ public class ProfileFragment extends Fragment {
      * Call when user has confirmed logout
      */
     private void logout(){
-
+        AuthenticationService.logout(getActivity());
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
 

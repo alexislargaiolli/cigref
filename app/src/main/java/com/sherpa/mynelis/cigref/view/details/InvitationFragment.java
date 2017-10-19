@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.details;
+package com.sherpa.mynelis.cigref.view.details;
 
 
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.sherpa.mynelis.cigref.EventServices;
 import com.sherpa.mynelis.cigref.R;
 
 /**

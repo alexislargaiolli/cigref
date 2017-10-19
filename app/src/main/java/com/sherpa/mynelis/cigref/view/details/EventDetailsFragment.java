@@ -1,7 +1,6 @@
-package com.sherpa.mynelis.cigref.details;
+package com.sherpa.mynelis.cigref.view.details;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -24,7 +23,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sherpa.mynelis.cigref.EventServices;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;

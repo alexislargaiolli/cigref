@@ -1,23 +1,17 @@
-package com.sherpa.mynelis.cigref.details;
+package com.sherpa.mynelis.cigref.view.details;
 
 import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
-import com.sherpa.mynelis.cigref.EventServices;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.EventFactory;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sherpa.mynelis.cigref.R;
 

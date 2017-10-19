@@ -1,22 +1,16 @@
-package com.sherpa.mynelis.cigref.events;
+package com.sherpa.mynelis.cigref.view.events;
 
 
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sherpa.mynelis.cigref.EventServices;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.details.EventDetailsActivity;
-import com.sherpa.mynelis.cigref.details.EventDetailsFragment;
-import com.sherpa.mynelis.cigref.details.InvitationFragment;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
 
@@ -24,14 +18,14 @@ import com.sherpa.mynelis.cigref.model.EventFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventByDateFragment extends Fragment {
+public class EventByPopularityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Event[] myDataset;
 
-    public EventByDateFragment() {
+    public EventByPopularityFragment() {
         myDataset = EventFactory.createEvents(4);
     }
 
@@ -39,10 +33,9 @@ public class EventByDateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.fragment_event_by_popularity, container, false);
 
-        View view =  inflater.inflate(R.layout.fragment_event_by_date, container, false);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_by_pop);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -54,6 +47,7 @@ public class EventByDateFragment extends Fragment {
 
         // specify an adapter (see also next example)
         mAdapter = new EventAdpader(myDataset);
+        mRecyclerView.setAdapter(mAdapter);
         mAdapter.setEventListener(new EventAdpader.EventListener() {
             @Override
             public void onEventSelected(Event eventCampaign) {
@@ -65,8 +59,6 @@ public class EventByDateFragment extends Fragment {
 
             }
         });
-
-        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }

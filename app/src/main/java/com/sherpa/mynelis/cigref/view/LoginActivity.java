@@ -1,39 +1,31 @@
-package com.sherpa.mynelis.cigref;
+package com.sherpa.mynelis.cigref.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.api.exception.LoginTimeout;
+import com.sherpa.mynelis.cigref.model.Credentials;
+import com.sherpa.mynelis.cigref.service.AuthenticationService;
 
 /**
  * A login screen that offers login via email/password.
@@ -88,10 +80,16 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        Credentials credentials = AuthenticationService.loadCredential(getApplicationContext());
+        if(credentials != null){
+            mEmailView.setText(credentials.getUsername());
+            mPasswordView.setText(credentials.getPassword());
+            attemptLogin();
+        }
 
         //TODO comment not to skip login
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        startActivity(intent);
     }
 
     /**
@@ -146,14 +144,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void storeCredential(String email, String password){
+        Log.d("LoginActivity", "store password");
+        AuthenticationService.storeCredential(getApplicationContext(), email, password);
+    }
+
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 1;
+    }
+
+    private void onLoginTimeout(){
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.error_login_timeout))
+                .show();
     }
 
     /**
@@ -208,38 +215,25 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                return AuthenticationService.login(mEmail, mPassword);
+            } catch (LoginTimeout loginTimeout) {
+                onLoginTimeout();
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
+                storeCredential(mEmail, mPassword);
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_login_failed));
                 mPasswordView.requestFocus();
             }
         }

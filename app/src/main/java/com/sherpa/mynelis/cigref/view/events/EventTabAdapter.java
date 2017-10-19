@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.events;
+package com.sherpa.mynelis.cigref.view.events;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.sherpa.mynelis.cigref.R;
-
-import static android.support.v4.content.res.TypedArrayUtils.getString;
 
 
 public class EventTabAdapter extends FragmentPagerAdapter {

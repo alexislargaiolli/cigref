@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref.events;
+package com.sherpa.mynelis.cigref.view.events;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import com.sherpa.mynelis.cigref.model.Event;
 import java.util.Date;
 
 /**
- * Created by jacques on 16/10/2017.
+ * Created by Alexis Largaiolli on 16/10/2017.
  */
 
 public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> {

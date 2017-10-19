@@ -1,4 +1,4 @@
-package com.sherpa.mynelis.cigref;
+package com.sherpa.mynelis.cigref.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,8 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.sherpa.mynelis.cigref.agenda.AgendaFragment;
-import com.sherpa.mynelis.cigref.events.EventsFragment;
+import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
+import com.sherpa.mynelis.cigref.view.events.EventsFragment;
 
 public class MainActivity extends AppCompatActivity {
 

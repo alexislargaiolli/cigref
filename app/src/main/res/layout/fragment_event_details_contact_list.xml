@@ -5,5 +5,5 @@
     android:name="fr.guizard.pascal.cigref.event.details.ContactRegisteredFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sherpa.mynelis.cigref.details.ContactListFragment"
+    tools:context=".view.details.ContactListFragment"
     tools:listitem="@layout/fragment_event_details_contact" />

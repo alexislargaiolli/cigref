@@ -39,6 +39,11 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.sothree.slidinguppanel:library:3.4.0'
-    testCompile 'junit:junit:4.12'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.android.gms:play-services-auth:11.0.4'
+    compile 'com.yakivmospan:scytale:1.0.1'
+    testCompile 'junit:junit:4.12'
 }
