@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.sherpa.mynelis.cigref.api.AccessToken;
+import com.sherpa.mynelis.cigref.api.NelisInterface;
+import com.sherpa.mynelis.cigref.api.ServiceGenerator;
 import com.sherpa.mynelis.cigref.api.Tools;
 import com.sherpa.mynelis.cigref.api.exception.LoginTimeout;
 import com.sherpa.mynelis.cigref.model.Credentials;
@@ -19,7 +21,6 @@ import javax.crypto.SecretKey;
  */
 public class AuthenticationService {
 
-    private static final String ROOT_URL = "sherpa.mynelis.com";
     private static final String SIGN_KEY = "auth_service";
     private static final String PREFERENCE_KEY = "auth_service_preferences";
     private static final String PREFERENCE_USERNAME_KEY = "ovASzcPyS3";
@@ -28,7 +29,10 @@ public class AuthenticationService {
     private static AccessToken mToken;
 
     public static boolean login(String username, String password) throws LoginTimeout {
-        mToken = Tools.getToken(ROOT_URL, username, password);
+        mToken = Tools.getToken(NelisInterface.API_ROOT, username, password);
+//        NelisInterface client = ServiceGenerator.createService(NelisInterface.class);
+//        client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, client);
+
         return mToken != null;
     }
 
@@ -44,11 +48,6 @@ public class AuthenticationService {
         // Encrypt credentials
         String encryptedUsername = crypto.encrypt(username, key);
         String encryptedPassword = crypto.encrypt(password, key);
-        Log.i("Scytale", "Encrypted data: " + encryptedUsername);
-
-        String decryptedData = crypto.decrypt(encryptedUsername, key);
-        Log.i("Scytale", "Decrypted data: " + decryptedData);
-
 
         // Store credentials to shared preferences
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_KEY, Context.MODE_PRIVATE);
@@ -95,6 +94,10 @@ public class AuthenticationService {
             return store.generateSymmetricKey(SIGN_KEY, null);
         }
         return store.getSymmetricKey(SIGN_KEY, null);
+    }
+
+    public static AccessToken getmToken() {
+        return mToken;
     }
 
 }

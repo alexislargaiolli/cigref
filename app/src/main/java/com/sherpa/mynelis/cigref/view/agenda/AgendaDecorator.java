@@ -7,6 +7,7 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 import com.sherpa.mynelis.cigref.model.Event;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class AgendaDecorator implements DayViewDecorator {
 
-    private HashMap<CalendarDay, List<Event>> eventsByDate;
+    private HashMap<CalendarDay, ArrayList<CampaignModel>> eventsByDate;
 
     public AgendaDecorator(){
         eventsByDate = new HashMap<>();
@@ -34,8 +35,8 @@ public class AgendaDecorator implements DayViewDecorator {
         view.addSpan(new DotSpan(5, Color.RED));
     }
 
-    public void addEvent(CalendarDay day, Event event){
-        List events = eventsByDate.get(day);
+    public void addEvent(CalendarDay day, CampaignModel event){
+        ArrayList events = eventsByDate.get(day);
         if(events == null){
             events = new ArrayList();
         }
@@ -45,8 +46,8 @@ public class AgendaDecorator implements DayViewDecorator {
         eventsByDate.put(day, events);
     }
 
-    public void remove(CalendarDay day, Event event){
-        List events = eventsByDate.get(day);
+    public void remove(CalendarDay day, CampaignModel event){
+        ArrayList events = eventsByDate.get(day);
         if(events == null){
             return;
         }
@@ -59,7 +60,7 @@ public class AgendaDecorator implements DayViewDecorator {
         }
     }
 
-    public List<Event> getEvents(CalendarDay day){
+    public ArrayList<CampaignModel> getEvents(CalendarDay day){
         return eventsByDate.get(day);
     }
 }

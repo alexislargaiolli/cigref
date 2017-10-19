@@ -15,6 +15,8 @@ public interface NelisInterface {
 
     String CLIENT_ID = "9rt01Y6eubJfeg78WTD6fB8yMb2cOgbs";
     String CLIENT_SECRET = "5NDtQ2AzDjjR8208HaI874ZEjL0q17pn";
+    String API_ROOT = "sherpa.mynelis.com";
+    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 
     @FormUrlEncoded

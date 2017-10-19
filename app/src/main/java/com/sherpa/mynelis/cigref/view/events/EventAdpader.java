@@ -8,8 +8,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.Event;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 
 public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> {
-    private Event[] mDataset;
+    private ArrayList<CampaignModel> mDataset;
     private static final String EVENT_DAY_FORMAT = "%1$td";
     private static final String EVENT_MONTH_FORMAT = "%1$tb";
     private static String GUEST_COUNT_FORMAT;
@@ -38,7 +39,7 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventAdpader(Event[] myDataset) {
+    public EventAdpader(ArrayList<CampaignModel> myDataset) {
         mDataset = myDataset;
     }
 
@@ -56,7 +57,8 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        initItem(holder.cardView, position, "Assemblée Générale 2017", 2, new Date(), "Conférence CIGREF", 1);
+        CampaignModel campaignModel = mDataset.get(position);
+        initItem(holder.cardView, position, campaignModel.getTitle(), 0, campaignModel.getEventDate(), campaignModel.getType().getLabelFr(), 1);
     }
 
     private void initItem(View cardView, final int position, String eventName, int guestCount, Date eventDate, String eventType, int invitationStatus) {
@@ -109,9 +111,9 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
      * @param accept   true if invitation has been accepted, false otherwise
      */
     private void onChangeInvitationStatus(int position, boolean accept) {
-        System.out.println(accept ? "Accept " : "Refuse " + mDataset[position]);
+        System.out.println(accept ? "Accept " : "Refuse " + mDataset.get(position));
         if(eventListener != null){
-            eventListener.onInvitationStatusChanged(mDataset[position], accept);
+            eventListener.onInvitationStatusChanged(mDataset.get(position), accept);
         }
     }
 
@@ -121,23 +123,23 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
      * @param position index of the clicked event in dataet
      */
     private void onEventSelected(int position) {
-        System.out.println("Event selected  " + mDataset[position]);
+        System.out.println("Event selected  " + mDataset.get(position));
         if(eventListener != null){
-            eventListener.onEventSelected(mDataset[position]);
+            eventListener.onEventSelected(mDataset.get(position));
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 
-    public Event[] getmDataset() {
+    public ArrayList<CampaignModel> getmDataset() {
         return mDataset;
     }
 
-    public void setmDataset(Event[] dataset) {
+    public void setmDataset(ArrayList<CampaignModel> dataset) {
         mDataset = dataset;
     }
 
@@ -146,7 +148,7 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     }
 
     public interface EventListener{
-        public void onEventSelected(Event eventCampaign);
-        public void onInvitationStatusChanged(Event eventCampaign, boolean accepted);
+        public void onEventSelected(CampaignModel eventCampaign);
+        public void onInvitationStatusChanged(CampaignModel eventCampaign, boolean accepted);
     }
 }

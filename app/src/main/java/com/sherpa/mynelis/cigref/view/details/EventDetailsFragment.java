@@ -23,11 +23,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.Event;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +41,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     private View mRootView;
-    private Event mEvent = null;
+    private CampaignModel mEvent = null;
     private TextView mSeeMore;
     private MapView mMapView;
 
@@ -51,7 +50,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
-        mEvent = (Event) bundle.getSerializable(EVENT_ARGUMENT_KEY);
+        mEvent = (CampaignModel) bundle.getSerializable(EVENT_ARGUMENT_KEY);
 
     }
 
@@ -78,10 +77,11 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         GoogleMapOptions options = new GoogleMapOptions();
         options.scrollGesturesEnabled(false);
 
-        Picasso.with(getContext()).load(mEvent.getImageUrl()).into(eventImage);
+//        Picasso.with(getContext()).load(mEvent.getImageUrl()).into(eventImage);
         eventTitle.setText(mEvent.getTitle());
-        eventType.setText(mEvent.getType());
-        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getParticpantsList().size()));
+        eventType.setText(mEvent.getType().getLabelFr());
+//        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getParticpantsList().size()));
+        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, 0));
         this.setContactList();
         this.setRegisteredButtons();
         this.setMailSendButton();
@@ -125,7 +125,8 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
-        if (mEvent.isRegistered()) {
+//        if (mEvent.isRegistered()) {
+        if(true){
             goButton.setSelected(true);
             notGoButton.setSelected(false);
             eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
@@ -133,9 +134,9 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
             goButton.setSelected(false);
             notGoButton.setSelected(false);
             eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
-            if (mEvent.isNotGo()) {
-                notGoButton.setSelected(true);
-            }
+//            if (mEvent.isNotGo()) {
+//                notGoButton.setSelected(true);
+//            }
         }
     }
 
@@ -189,14 +190,13 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
                     }
                 });
 
-        eventAddressName.setText(mEvent.getEventAdress().getLocationName());
-        eventAddressStreet.setText(mEvent.getEventAdress().getStreet());
-        eventAddressCity.setText(mEvent.getEventAdress().getPostalCodeWithCity());
-        eventDate.setText(mEvent.getEventDate().getDate());
-        eventDateTime.setText(mEvent.getEventDate().getTime());
+        eventAddressName.setText(mEvent.getEventPlace());
+//        eventAddressStreet.setText(mEvent.getEventAdress().getStreet());
+//        eventAddressCity.setText(mEvent.getEventAdress().getPostalCodeWithCity());
+//        eventDate.setText(mEvent.getEventDate().getDate());
+//        eventDateTime.setText(mEvent.getEventDate().getTime());
 
-        String animateBy = getString(R.string.event_details_animate_by) +
-                " " + mEvent.getAnimator().getPreparedName(false);
+        String animateBy = getString(R.string.event_details_animate_by) + " " + mEvent.getEventOrganizer();
         eventAnimator.setText(animateBy);
     }
 

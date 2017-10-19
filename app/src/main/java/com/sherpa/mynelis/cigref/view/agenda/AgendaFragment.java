@@ -14,10 +14,12 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.view.events.EventAdpader;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -31,11 +33,11 @@ public class AgendaFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Event[] myDataset;
+    private ArrayList<CampaignModel> myDataset;
 
 
     public AgendaFragment() {
-        myDataset = new Event[0];
+
     }
 
 
@@ -44,6 +46,24 @@ public class AgendaFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_agenda, container, false);
 
+        initRecycler(view, container);
+        initCalendar(view);
+
+
+        return view;
+    }
+
+    public void onEventSelected(ArrayList<CampaignModel> events){
+        mAdapter.setmDataset(events);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void clearSelection(){
+        mAdapter.setmDataset(new ArrayList<CampaignModel>());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void initRecycler(View view, ViewGroup container){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_agenda);
 
         // use this setting to improve performance if you know that changes
@@ -57,13 +77,15 @@ public class AgendaFragment extends Fragment {
         // specify an adapter (see also next example)
         mAdapter = new EventAdpader(myDataset);
         mRecyclerView.setAdapter(mAdapter);
+    }
 
+    private void initCalendar(View view){
         calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
         final AgendaDecorator decorator = new AgendaDecorator();
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                List<Event> events = decorator.getEvents(date);
+                ArrayList<CampaignModel> events = decorator.getEvents(date);
                 if(events != null){
                     onEventSelected(events);
                 }
@@ -73,21 +95,9 @@ public class AgendaFragment extends Fragment {
             }
         });
 
-        CalendarDay today = CalendarDay.from(Calendar.getInstance());
-        decorator.addEvent(today, EventFactory.createEvent());
+//        CalendarDay today = CalendarDay.from(Calendar.getInstance());
+//        decorator.addEvent(today, EventFactory.createEvent());
         calendarView.addDecorator(decorator);
-
-        return view;
-    }
-
-    public void onEventSelected(List<Event> events){
-        mAdapter.setmDataset(events.toArray(new Event[events.size()]));
-        mAdapter.notifyDataSetChanged();
-    }
-
-    public void clearSelection(){
-        mAdapter.setmDataset(new Event[0]);
-        mAdapter.notifyDataSetChanged();
     }
 
 }

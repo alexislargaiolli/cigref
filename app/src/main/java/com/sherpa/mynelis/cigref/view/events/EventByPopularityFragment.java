@@ -9,10 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
+import com.sherpa.mynelis.cigref.service.ServiceResponse;
+
+import java.util.ArrayList;
 
 
 /**
@@ -23,11 +28,8 @@ public class EventByPopularityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Event[] myDataset;
 
-    public EventByPopularityFragment() {
-        myDataset = EventFactory.createEvents(4);
-    }
+    public EventByPopularityFragment() { }
 
 
     @Override
@@ -35,6 +37,27 @@ public class EventByPopularityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_event_by_popularity, container, false);
 
+        initData();
+        initRecycler(view, container);
+
+        return view;
+    }
+
+    private void initData(){
+        EventCampaignService.getMyInvitations(new ServiceResponse<CampaignModel>() {
+            @Override
+            public void onSuccess(ArrayList<CampaignModel> datas) {
+                mAdapter.setmDataset(datas);
+            }
+
+            @Override
+            public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+            }
+        });
+    }
+
+    private void initRecycler(View view, ViewGroup container){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_by_pop);
 
         // use this setting to improve performance if you know that changes
@@ -46,21 +69,19 @@ public class EventByPopularityFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(myDataset);
+        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setEventListener(new EventAdpader.EventListener() {
             @Override
-            public void onEventSelected(Event eventCampaign) {
+            public void onEventSelected(CampaignModel eventCampaign) {
                 EventServices.goToEventDetail(getContext(), eventCampaign);
             }
 
             @Override
-            public void onInvitationStatusChanged(Event eventCampaign, boolean accepted) {
+            public void onInvitationStatusChanged(CampaignModel eventCampaign, boolean accepted) {
 
             }
         });
-
-        return view;
     }
 
 }

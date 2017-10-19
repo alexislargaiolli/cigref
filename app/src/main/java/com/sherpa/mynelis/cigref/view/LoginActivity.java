@@ -145,7 +145,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void storeCredential(String email, String password){
-        Log.d("LoginActivity", "store password");
         AuthenticationService.storeCredential(getApplicationContext(), email, password);
     }
 

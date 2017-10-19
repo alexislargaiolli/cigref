@@ -6,11 +6,13 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.sherpa.mynelis.cigref.model.common.Links;
 
-public class CampaignTypeModel {
+import java.io.Serializable;
+
+public class CampaignTypeModel implements Serializable{
 
     private static final String TAG = "CampaignTypeModel";
 
-    private int id;
+    private transient int id;
     @SerializedName("id")
     private int idNelis;
     @SerializedName("shortname")

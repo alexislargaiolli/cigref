@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.provider.CalendarContract;
 
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.view.details.EventDetailsActivity;
 import com.sherpa.mynelis.cigref.view.details.EventDetailsFragment;
 import com.sherpa.mynelis.cigref.model.Event;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -24,14 +27,14 @@ public class EventServices {
      * Open client mail to share an event campaign by mail
      * @param event
      */
-    public static void sendEventByMail(Context context, Event event) {
+    public static void sendEventByMail(Context context, CampaignModel event) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         String contentPlain = context.getResources().getString(R.string.transfert_mail_content_plain);
-        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getFormattedAddress(), event.getEventDate().getDate());
+        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), event.getClosedDate());
 
         String contentHTML = context.getResources().getString(R.string.transfert_mail_content_html);
-        String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getFormattedAddress(), event.getEventDate().getDate());
+        String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getEventPlace(), event.getClosedDate());
 
         String title = context.getResources().getString(R.string.transfert_mail_title);
         String formattedTitle = String.format(title, event.getTitle());
@@ -46,7 +49,7 @@ public class EventServices {
      * @param context
      * @param event
      */
-    public static void goToEventDetail(Context context, Event event) {
+    public static void goToEventDetail(Context context, CampaignModel event) {
         Intent intent = new Intent(context, EventDetailsActivity.class);
         intent.putExtra(EventDetailsFragment.EVENT_ARGUMENT_KEY, event);
         context.startActivity(intent);
@@ -58,10 +61,10 @@ public class EventServices {
      * @param event
      * @throws SecurityException
      */
-    public static void addEventToCalendar(Context context, Event event) throws SecurityException {
+    public static void addEventToCalendar(Context context, CampaignModel event) throws SecurityException {
         ContentResolver cr = context.getContentResolver();
         ContentValues values = new ContentValues();
-        Long startTime = event.getStartDate().getTime();
+        Long startTime = event.getClosedDate().getTime();
         values.put(CalendarContract.Events.DTSTART, startTime);
         values.put(CalendarContract.Events.DURATION, "PT1H");
 //        values.put(Events.DTEND, endMillis);

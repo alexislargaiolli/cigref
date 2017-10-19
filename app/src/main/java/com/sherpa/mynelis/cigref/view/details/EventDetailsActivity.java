@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -18,7 +19,7 @@ import com.sherpa.mynelis.cigref.R;
 public class EventDetailsActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
-    private Event event;
+    private CampaignModel event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 //        });
 
         Intent intent = getIntent();
-        event = (Event) intent.getSerializableExtra(EventDetailsFragment.EVENT_ARGUMENT_KEY);
+        event = (CampaignModel) intent.getSerializableExtra(EventDetailsFragment.EVENT_ARGUMENT_KEY);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(EventDetailsFragment.EVENT_ARGUMENT_KEY, event);

@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.sherpa.mynelis.cigref.api.NelisInterface;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -121,7 +124,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
     /**
      * Overrides
      */
@@ -135,12 +137,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_CAMPAIGN);
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_CAMPAIGN_TYPE);
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_LINKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMPAIGN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMPAIGN_TYPE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LINKS);
         onCreate(db);
     }
-
 
 
     /************************* CAMPAIGN CRUD *************************/
@@ -151,7 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long createCampaign(CampaignModel campaign, boolean temp) {
 
         //check si existe deja
-        if(!temp) {
+        if (!temp) {
             if (campaignExists(campaign.getIdNelis()))
                 return 0;
         }
@@ -163,11 +164,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(CAMPAIGN_TYPE_ID, campaign.getType().getId());
         values.put(CAMPAIGN_TITLE, campaign.getTitle());
         values.put(CAMPAIGN_DESCRIPTION, campaign.getDescription());
-        values.put(CAMPAIGN_EVENT_DATE, campaign.getEventDate());
+        values.put(CAMPAIGN_EVENT_DATE, campaign.getEventDate().toString());
         values.put(CAMPAIGN_EVENT_PLACE, campaign.getEventPlace());
         values.put(CAMPAIGN_EVENT_ORGANIZER, campaign.getEventOrganizer());
-        values.put(CAMPAIGN_START_DATE, campaign.getStartDate());
-        values.put(CAMPAIGN_CLOSED_DATE, campaign.getClosedDate());
+        values.put(CAMPAIGN_START_DATE, campaign.getStartDate().toString());
+        values.put(CAMPAIGN_CLOSED_DATE, campaign.getClosedDate().toString());
         values.put(CAMPAIGN_STATUS, campaign.getStatus());
         values.put(CAMPAIGN_DATE_CREATION, campaign.getDateCreation());
         values.put(CAMPAIGN_DATE_UPDATE, campaign.getDateUpdate());
@@ -189,26 +190,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         CampaignModel c = new CampaignModel();
 
         String query = "";
-        if(localId)
+        if (localId)
             query = "SELECT * FROM " + TABLE_CAMPAIGN + " WHERE " + KEY_ID + " = " + id;
         else query = "SELECT * FROM " + TABLE_CAMPAIGN + " WHERE " + NELIS_ID + " = " + id;
 
         Cursor cursor = db.rawQuery(query, null);
-        if(cursor != null && cursor.moveToFirst()) {
-            c.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
+        if (cursor != null && cursor.moveToFirst()) {
+            SimpleDateFormat sdfDateWithTime = new SimpleDateFormat(NelisInterface.DATE_FORMAT);
+
+
+            c.setIdLocal(cursor.getInt(cursor.getColumnIndex(KEY_ID)));
             c.setIdNelis(cursor.getInt(cursor.getColumnIndex(NELIS_ID)));
             c.setTitle(cursor.getString(cursor.getColumnIndex(CAMPAIGN_TITLE)));
             c.setDescription(cursor.getString(cursor.getColumnIndex(CAMPAIGN_DESCRIPTION)));
-            c.setEventDate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_DATE)));
+
             c.setEventPlace(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_PLACE)));
             c.setEventOrganizer(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_ORGANIZER)));
-            c.setStartDate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_START_DATE)));
-            c.setClosedDate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_CLOSED_DATE)));
             c.setStatus(cursor.getString(cursor.getColumnIndex(CAMPAIGN_STATUS)));
             c.setDateCreation(cursor.getString(cursor.getColumnIndex(CAMPAIGN_DATE_CREATION)));
             c.setDateUpdate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_DATE_UPDATE)));
             //c.setlinks
             c.setEntityType(cursor.getString(cursor.getColumnIndex(CAMPAIGN_ENTITY_TYPE)));
+
+            try {
+                c.setEventDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_DATE))));
+                c.setStartDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_START_DATE))));
+                c.setClosedDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_CLOSED_DATE))));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         cursor.close();
@@ -221,7 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean campaignExists(long idNelis) {
         CampaignModel c = readCampaign(idNelis, false);
-        if(c.getId() == 0)
+        if (c.getIdLocal() == 0)
             return false;
         else return true;
     }

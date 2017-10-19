@@ -6,38 +6,55 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.sherpa.mynelis.cigref.model.common.Links;
 
+import java.io.Serializable;
+import java.util.Date;
 
-public class CampaignModel {
+
+public class CampaignModel implements Serializable{
 
     private static final String TAG = "CampaignModel";
 
-    private int id;
+    private transient int idLocal;
+
     @SerializedName("id")
     private int idNelis;
+
     @SerializedName("type")
     private CampaignTypeModel type;
+
     @SerializedName("title")
     private String title;
+
     @SerializedName("description")
     private String description;
+
     @SerializedName("event_date")
-    private String eventDate;
+    private Date eventDate;
+
+    @SerializedName("start_date")
+    private Date startDate;
+
+    @SerializedName("closed_date")
+    private Date closedDate;
+
     @SerializedName("event_place")
     private String eventPlace;
+
     @SerializedName("event_organizer")
     private String eventOrganizer;
-    @SerializedName("start_date")
-    private String startDate;
-    @SerializedName("closed_date")
-    private String closedDate;
+
     @SerializedName("status")
     private String status;
+
     @SerializedName("date_creation")
     private String dateCreation;
+
     @SerializedName("date_update")
     private String dateUpdate;
+
     @SerializedName("_links")
     private Links links;
+
     @SerializedName("entity_type")
     private String entityType;
 
@@ -45,22 +62,19 @@ public class CampaignModel {
     /**
      * Constructeurs
      */
-    public CampaignModel() { this(0, 0, null, "", "", "", "", "", "", "", "", "", "", null, ""); }
+    public CampaignModel() { this(0, 0, null, "", "", new Date(), new Date(), new Date(), "", "", "", "", "", null, ""); }
 
-    public CampaignModel(int id, int idNelis, CampaignTypeModel type, String title, String description,
-                         String eventDate, String eventPlace, String eventOrganizer, String startDate,
-                         String closedDate, String status, String dateCreation, String dateUpdate,
-                         Links links, String entityType) {
-        this.id = id;
+    public CampaignModel(int idLocal, int idNelis, CampaignTypeModel type, String title, String description, Date eventDate, Date startDate, Date closedDate, String eventPlace, String eventOrganizer, String status, String dateCreation, String dateUpdate, Links links, String entityType) {
+        this.idLocal = idLocal;
         this.idNelis = idNelis;
         this.type = type;
         this.title = title;
         this.description = description;
         this.eventDate = eventDate;
-        this.eventPlace = eventPlace;
-        this.eventOrganizer = eventOrganizer;
         this.startDate = startDate;
         this.closedDate = closedDate;
+        this.eventPlace = eventPlace;
+        this.eventOrganizer = eventOrganizer;
         this.status = status;
         this.dateCreation = dateCreation;
         this.dateUpdate = dateUpdate;
@@ -68,14 +82,12 @@ public class CampaignModel {
         this.entityType = entityType;
     }
 
-
-
     /**
      * log de l'objet pour le debug
      */
     public void consolePrint() {
         Log.d(TAG, "---------------CAMPAIGN----------------");
-        //Log.d(TAG, "ID : "+id);
+        Log.d(TAG, "ID : "+idLocal);
         Log.d(TAG, "IDNELIS : "+idNelis);
         if(type != null)
             type.consolePrint();
@@ -100,12 +112,12 @@ public class CampaignModel {
      * Getters & setters
      */
 
-    public int getId() {
-        return id;
+    public int getIdLocal() {
+        return idLocal;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdLocal(int idLocal) {
+        this.idLocal = idLocal;
     }
 
 
@@ -141,12 +153,28 @@ public class CampaignModel {
         this.description = description;
     }
 
-    public String getEventDate() {
+    public Date getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(String eventDate) {
+    public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate(Date closedDate) {
+        this.closedDate = closedDate;
     }
 
     public String getEventPlace() {
@@ -163,22 +191,6 @@ public class CampaignModel {
 
     public void setEventOrganizer(String eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getClosedDate() {
-        return closedDate;
-    }
-
-    public void setClosedDate(String closedDate) {
-        this.closedDate = closedDate;
     }
 
     public String getStatus() {

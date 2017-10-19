@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.service.AuthenticationService;
 import com.sherpa.mynelis.cigref.view.events.EventAdpader;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,10 +32,9 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Event[] myDataset;
 
     public ProfileFragment() {
-        myDataset = EventFactory.createEvents(4);
+
     }
 
 
@@ -40,6 +42,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        initData();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_profil);
 
@@ -52,7 +56,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(myDataset);
+        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
 
         ImageButton logoutBtn = (ImageButton) view.findViewById(R.id.logoutButton);
@@ -64,6 +68,10 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void initData(){
+
     }
 
     /**
