@@ -27,7 +27,7 @@ public class ServiceGenerator {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    public static <S> S createService(Class<S> serviceClass) {
+    private static <S> S createService(Class<S> serviceClass) {
         if (!httpClient.interceptors().contains(logging)) {
             httpClient.addInterceptor(logging);
             builder.client(httpClient.build());
@@ -35,5 +35,14 @@ public class ServiceGenerator {
         }
 
         return retrofit.create(serviceClass);
+    }
+
+    private static NelisInterface nelisClient;
+
+    public static NelisInterface createNelisClient(){
+        if(nelisClient == null){
+            nelisClient = createService(NelisInterface.class);
+        }
+        return nelisClient;
     }
 }

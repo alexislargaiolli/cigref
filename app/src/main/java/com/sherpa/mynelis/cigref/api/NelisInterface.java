@@ -1,6 +1,7 @@
 package com.sherpa.mynelis.cigref.api;
 
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 
 import java.util.ArrayList;
 import retrofit2.Call;
@@ -8,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 
@@ -16,7 +18,7 @@ public interface NelisInterface {
     String CLIENT_ID = "9rt01Y6eubJfeg78WTD6fB8yMb2cOgbs";
     String CLIENT_SECRET = "5NDtQ2AzDjjR8208HaI874ZEjL0q17pn";
     String API_ROOT = "sherpa.mynelis.com";
-    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 
     @FormUrlEncoded
@@ -27,6 +29,15 @@ public interface NelisInterface {
 
 
     @GET("api/v4/eventcampaigns/me/invited")
-    Call<ArrayList<CampaignModel>> getInvitations(@Query("access_token") String accessToken);
+    Call<ArrayList<CampaignModel>> getMyCampaigns(@Query("access_token") String accessToken);
+
+    @GET("api/v4/eventcampaigns/me/accepted")
+    Call<ArrayList<CampaignModel>> getMyAcceptedCampaigns(@Query("access_token") String accessToken);
+
+    @GET("api/v4/eventcampaigns/{campaignId}/invitations")
+    Call<ArrayList<Invitation>> getCampaignInvitations(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);
+
+    @GET("api/v4/eventcampaigns/{campaignId}/invitations/me")
+    Call<Invitation> getMyCampaignInvitation(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);
 
 }

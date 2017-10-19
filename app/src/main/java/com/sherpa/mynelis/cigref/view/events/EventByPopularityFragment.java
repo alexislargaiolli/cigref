@@ -13,8 +13,6 @@ import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.EventFactory;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 
 import java.util.ArrayList;
@@ -37,17 +35,18 @@ public class EventByPopularityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_event_by_popularity, container, false);
 
-        initData();
         initRecycler(view, container);
+        initData();
 
         return view;
     }
 
     private void initData(){
-        EventCampaignService.getMyInvitations(new ServiceResponse<CampaignModel>() {
+        EventCampaignService.getMyCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
             @Override
             public void onSuccess(ArrayList<CampaignModel> datas) {
                 mAdapter.setmDataset(datas);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override

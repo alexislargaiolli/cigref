@@ -2,19 +2,21 @@ package com.sherpa.mynelis.cigref.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.sherpa.mynelis.cigref.api.AccessToken;
 import com.sherpa.mynelis.cigref.api.NelisInterface;
 import com.sherpa.mynelis.cigref.api.ServiceGenerator;
-import com.sherpa.mynelis.cigref.api.Tools;
 import com.sherpa.mynelis.cigref.api.exception.LoginTimeout;
 import com.sherpa.mynelis.cigref.model.Credentials;
 import com.yakivmospan.scytale.Crypto;
 import com.yakivmospan.scytale.Options;
 import com.yakivmospan.scytale.Store;
 
+import java.io.IOException;
+
 import javax.crypto.SecretKey;
+
+import retrofit2.Call;
 
 /**
  * Created by Alexis Largaiolli on 19/10/17.
@@ -29,10 +31,13 @@ public class AuthenticationService {
     private static AccessToken mToken;
 
     public static boolean login(String username, String password) throws LoginTimeout {
-        mToken = Tools.getToken(NelisInterface.API_ROOT, username, password);
-//        NelisInterface client = ServiceGenerator.createService(NelisInterface.class);
-//        client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, client);
-
+        NelisInterface client = ServiceGenerator.createNelisClient();
+        Call<AccessToken> call = client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, password);
+        try {
+            mToken = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return mToken != null;
     }
 

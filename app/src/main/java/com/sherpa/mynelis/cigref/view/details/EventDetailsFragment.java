@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,7 +63,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         ImageView eventImage = (ImageView) mRootView.findViewById(R.id.eventDetailsImage);
         TextView eventTitle = (TextView) mRootView.findViewById(R.id.eventDetailsTitle);
         TextView eventType = (TextView) mRootView.findViewById(R.id.eventDetailsType);
-        TextView eventRegisteredCount = (TextView) mRootView.findViewById(R.id.eventDetailsRegisteredCount);
+
 
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
@@ -80,14 +81,20 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
 //        Picasso.with(getContext()).load(mEvent.getImageUrl()).into(eventImage);
         eventTitle.setText(mEvent.getTitle());
         eventType.setText(mEvent.getType().getLabelFr());
-//        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getParticpantsList().size()));
-        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, 0));
+
+        this.updateInvitationInfo();
         this.setContactList();
         this.setRegisteredButtons();
         this.setMailSendButton();
         this.setEventDetails();
 
         return mRootView;
+    }
+
+    private void updateInvitationInfo() {
+        int invitationCount = mEvent.getInvitations() != null ? mEvent.getInvitations().size() : 0;
+        TextView eventRegisteredCount = (TextView) mRootView.findViewById(R.id.eventDetailsRegisteredCount);
+        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, invitationCount));
     }
 
     private void setContactList() {
@@ -126,7 +133,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         });
 
 //        if (mEvent.isRegistered()) {
-        if(true){
+        if (true) {
             goButton.setSelected(true);
             notGoButton.setSelected(false);
             eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
@@ -173,14 +180,16 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         this.setShowDescriptionDetailAction();
 
         TextView eventAddressName = (TextView) mRootView.findViewById(R.id.eventDetailsAddressName);
-        TextView eventAddressStreet = (TextView) mRootView.findViewById(R.id.eventDetailsAddressStreet);
-        TextView eventAddressCity = (TextView) mRootView.findViewById(R.id.eventDetailsAddressCity);
+        LinearLayout placeContainerView = (LinearLayout) mRootView.findViewById(R.id.placeContainerView);
+
 
         TextView eventDate = (TextView) mRootView.findViewById(R.id.eventDetailsDate);
-        TextView eventDateTime = (TextView) mRootView.findViewById(R.id.eventDetailsDateTime);
+        LinearLayout dateContainerView = (LinearLayout) mRootView.findViewById(R.id.dateContainerView);
 
         TextView eventAnimator = (TextView) mRootView.findViewById(R.id.eventDetailsAnimator);
+        LinearLayout animatorContainerView = (LinearLayout) mRootView.findViewById(R.id.animatorContainerView);
 
+        if(mEvent.getDescription() != null && !mEvent.getDescription().isEmpty()){
         eventDescription.setText(mEvent.getDescription());
         eventDescription.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -189,15 +198,34 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
                         showHideSeeMore(eventDescription);
                     }
                 });
+        }
+        else {
+            LinearLayout descriptionContainerView = (LinearLayout) mRootView.findViewById(R.id.descriptionContainerView);
+            descriptionContainerView.setVisibility(View.GONE);
+        }
 
-        eventAddressName.setText(mEvent.getEventPlace());
+        if (mEvent.getEventPlace() != null && !mEvent.getEventPlace().isEmpty()) {
+            eventAddressName.setText(mEvent.getEventPlace());
+        } else {
+            placeContainerView.setVisibility(View.GONE);
+        }
+
+        if (mEvent.getEventDate() != null && !mEvent.getEventDate().isEmpty()) {
+            eventDate.setText(mEvent.getEventDate());
+        } else {
+            dateContainerView.setVisibility(View.GONE);
+        }
 //        eventAddressStreet.setText(mEvent.getEventAdress().getStreet());
 //        eventAddressCity.setText(mEvent.getEventAdress().getPostalCodeWithCity());
 //        eventDate.setText(mEvent.getEventDate().getDate());
 //        eventDateTime.setText(mEvent.getEventDate().getTime());
 
-        String animateBy = getString(R.string.event_details_animate_by) + " " + mEvent.getEventOrganizer();
-        eventAnimator.setText(animateBy);
+        if (mEvent.getEventOrganizer() != null && !mEvent.getEventOrganizer().isEmpty()) {
+            String animateBy = getString(R.string.event_details_animate_by) + " " + mEvent.getEventOrganizer();
+            eventAnimator.setText(animateBy);
+        } else {
+            animatorContainerView.setVisibility(View.GONE);
+        }
     }
 
     private void showHideSeeMore(TextView eventDescription) {
@@ -218,7 +246,7 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {
         try {
-            if(mEvent.getEventPlace() != null && !mEvent.getEventPlace().isEmpty()) {
+            if (mEvent.getEventPlace() != null && !mEvent.getEventPlace().isEmpty()) {
                 Geocoder geo = new Geocoder(getContext(), Locale.getDefault());
                 List<Address> adresses = geo.getFromLocationName(mEvent.getEventPlace(), 1);
                 if (!adresses.isEmpty()) {

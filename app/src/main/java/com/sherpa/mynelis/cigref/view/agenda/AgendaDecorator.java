@@ -10,6 +10,7 @@ import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class AgendaDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
+
         return eventsByDate.containsKey(day);
     }
 
@@ -35,7 +37,8 @@ public class AgendaDecorator implements DayViewDecorator {
         view.addSpan(new DotSpan(5, Color.RED));
     }
 
-    public void addEvent(CalendarDay day, CampaignModel event){
+    public void addEvent(Date date, CampaignModel event){
+        CalendarDay day = CalendarDay.from(date);
         ArrayList events = eventsByDate.get(day);
         if(events == null){
             events = new ArrayList();
@@ -46,7 +49,8 @@ public class AgendaDecorator implements DayViewDecorator {
         eventsByDate.put(day, events);
     }
 
-    public void remove(CalendarDay day, CampaignModel event){
+    public void remove(Date date, CampaignModel event){
+        CalendarDay day = CalendarDay.from(date);
         ArrayList events = eventsByDate.get(day);
         if(events == null){
             return;

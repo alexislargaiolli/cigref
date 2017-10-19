@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.CigrefUser;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,10 +19,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<ContactListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<CigrefUser> mContacts;
+    private final List<Invitation> mContacts;
     private Context mContext;
 
-    public ContactListRecyclerViewAdapter(List<CigrefUser> items, Context context) {
+    public ContactListRecyclerViewAdapter(List<Invitation> items, Context context) {
         mContacts = items;
         mContext = context;
     }
@@ -36,7 +37,7 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mContacts.get(position);
-        Picasso.with(mContext).load(mContacts.get(position).getProfileImageUrl()).into(holder.mProfileImage);
+//        Picasso.with(mContext).load(mContacts.get(position).getProfileImageUrl()).into(holder.mProfileImage);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final CircleImageView mProfileImage;
-        public CigrefUser mItem;
+        public Invitation mItem;
 
         public ViewHolder(View view) {
             super(view);

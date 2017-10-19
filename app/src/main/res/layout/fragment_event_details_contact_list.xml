@@ -4,6 +4,6 @@
     android:id="@+id/eventDetailsContactRegisteredlist"
     android:name="fr.guizard.pascal.cigref.event.details.ContactRegisteredFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".view.details.ContactListFragment"
     tools:listitem="@layout/fragment_event_details_contact" />

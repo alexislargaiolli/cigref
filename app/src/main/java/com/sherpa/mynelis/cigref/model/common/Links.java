@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Links {
+import java.io.Serializable;
+
+public class Links implements Serializable {
 
     private static final String TAG = "Links";
 

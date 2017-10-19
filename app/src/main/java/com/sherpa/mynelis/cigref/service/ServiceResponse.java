@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public interface ServiceResponse<T> {
 
-    void onSuccess(ArrayList<T> datas);
+    void onSuccess(T datas);
 
     void onError(ServiceReponseErrorType error, String errorMessage);
 

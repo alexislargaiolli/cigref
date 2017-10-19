@@ -43,7 +43,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        initData();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_profil);
 
@@ -66,6 +65,8 @@ public class ProfileFragment extends Fragment {
                 confirmLogout();
             }
         });
+
+        initData();
 
         return view;
     }

@@ -45,7 +45,7 @@
             <FrameLayout
                 android:id="@+id/eventDetailsRegisteredList"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content" />
             <!-- END - Contact list-->
 
             <TextView
@@ -120,17 +120,18 @@
             android:paddingStart="20dp">
 
             <LinearLayout
+                android:id="@+id/descriptionContainerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/eventDetailsDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:ellipsize="end" />
+                    android:ellipsize="end"
+                    android:maxLines="4" />
 
                 <TextView
                     android:id="@+id/eventDetailsShowDescription"
@@ -138,111 +139,86 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="5dp"
-                    android:textColor="@android:color/holo_blue_light"
-                    android:text="@string/general_see_more"/>
+                    android:text="@string/general_see_more"
+                    android:textColor="@android:color/holo_blue_light" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/placeContainerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ic_event_details_address"
                     android:contentDescription="@string/event_details_ic_map"
+                    android:paddingEnd="20dp"
                     android:paddingStart="0dp"
-                    android:paddingEnd="20dp" />
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_event_details_address" />
 
-                <LinearLayout
-                    android:id="@+id/eventDetailsCompleteAddress"
+                <TextView
+                    android:id="@+id/eventDetailsAddressName"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/eventDetailsAddressName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/eventDetailsAddressStreet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/eventDetailsAddressCity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/dateContainerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ic_event_details_clock"
-                    android:paddingStart="0dp"
+                    android:contentDescription="@string/event_details_ic_clock"
                     android:paddingEnd="20dp"
-                    android:contentDescription="@string/event_details_ic_clock"/>
+                    android:paddingStart="0dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_event_details_clock" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/eventDetailsDate"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/eventDetailsDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:id="@+id/eventDetailsDateTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/animatorContainerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|start"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ic_event_details_animator"
-                    android:paddingStart="0dp"
+                    android:contentDescription="@string/event_details_ic_animator"
                     android:paddingEnd="20dp"
-                    android:contentDescription="@string/event_details_ic_animator"/>
+                    android:paddingStart="0dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_event_details_animator" />
 
                 <TextView
                     android:id="@+id/eventDetailsAnimator"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 

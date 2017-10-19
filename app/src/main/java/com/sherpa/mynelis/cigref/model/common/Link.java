@@ -2,8 +2,10 @@ package com.sherpa.mynelis.cigref.model.common;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class Link {
+
+public class Link implements Serializable {
 
     @SerializedName("href")
     private String href;

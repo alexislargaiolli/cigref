@@ -10,22 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.api.NelisInterface;
-import com.sherpa.mynelis.cigref.api.ServiceGenerator;
-import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.EventFactory;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
-import com.sherpa.mynelis.cigref.service.AuthenticationService;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -42,45 +33,62 @@ public class EventByDateFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_by_date, container, false);
 
-        initData();
         initRecycler(view, container);
+        initData();
 
         return view;
     }
 
     private void initData() {
-        NelisInterface client = ServiceGenerator.createService(NelisInterface.class);
-        Call<ArrayList<CampaignModel>> campaigns = client.getInvitations(AuthenticationService.getmToken().getAccessToken());
-        campaigns.enqueue(new Callback<ArrayList<CampaignModel>>() {
+        EventCampaignService.getMyCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<CampaignModel>> call, Response<ArrayList<CampaignModel>> response) {
-                System.out.println("Campaign !");
-                mAdapter.setmDataset(response.body());
-                mAdapter.notifyDataSetChanged();
+            public void onSuccess(ArrayList<CampaignModel> datas) {
+                onCampaignLoaded(datas);
             }
 
             @Override
-            public void onFailure(Call<ArrayList<CampaignModel>> call, Throwable t) {
+            public void onError(ServiceReponseErrorType error, String errorMessage) {
 
             }
         });
+    }
 
-//        EventCampaignService.getMyInvitations(new ServiceResponse<CampaignModel>() {
-//            @Override
-//            public void onSuccess(ArrayList<CampaignModel> datas) {
-//                mAdapter.setmDataset(datas);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onError(ServiceReponseErrorType error, String errorMessage) {
-//
-//            }
-//        });
+    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
+        if(campaigns != null) {
+            mAdapter.setmDataset(campaigns);
+            mAdapter.notifyDataSetChanged();
+            for (int i = 0; i < campaigns.size(); i++) {
+                final CampaignModel campaign = campaigns.get(i);
+                final int position = i;
+                EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
+                    @Override
+                    public void onSuccess(Invitation datas) {
+                        campaign.setMyInvitation(datas);
+                        mAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                    }
+                });
+                EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Invitation> datas) {
+                        campaign.setInvitations(datas);
+                        mAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                    }
+                });
+            }
+        }
     }
 
     private void initRecycler(View view, ViewGroup container) {

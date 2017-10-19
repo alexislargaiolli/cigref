@@ -211,9 +211,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             c.setDateUpdate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_DATE_UPDATE)));
             //c.setlinks
             c.setEntityType(cursor.getString(cursor.getColumnIndex(CAMPAIGN_ENTITY_TYPE)));
+            c.setEventDate(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_DATE)));
 
             try {
-                c.setEventDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_EVENT_DATE))));
                 c.setStartDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_START_DATE))));
                 c.setClosedDate(sdfDateWithTime.parse(cursor.getString(cursor.getColumnIndex(CAMPAIGN_CLOSED_DATE))));
             } catch (ParseException e) {

@@ -15,6 +15,9 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.service.EventCampaignService;
+import com.sherpa.mynelis.cigref.service.ServiceResponse;
 import com.sherpa.mynelis.cigref.view.events.EventAdpader;
 import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.EventFactory;
@@ -34,6 +37,7 @@ public class AgendaFragment extends Fragment {
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<CampaignModel> myDataset;
+    private AgendaDecorator decorator;
 
 
     public AgendaFragment() {
@@ -48,19 +52,69 @@ public class AgendaFragment extends Fragment {
 
         initRecycler(view, container);
         initCalendar(view);
-
-
+        initData();
         return view;
     }
 
-    public void onEventSelected(ArrayList<CampaignModel> events){
-        mAdapter.setmDataset(events);
+    public void onEventSelected(ArrayList<CampaignModel> campaigns){
+        mAdapter.setmDataset(campaigns);
         mAdapter.notifyDataSetChanged();
+        for (int i = 0; i < campaigns.size(); i++) {
+            final CampaignModel campaign = campaigns.get(i);
+            final int position = i;
+            EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
+                @Override
+                public void onSuccess(Invitation datas) {
+                    campaign.setMyInvitation(datas);
+                    mAdapter.notifyItemChanged(position);
+                }
+
+                @Override
+                public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                }
+            });
+            EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
+                @Override
+                public void onSuccess(ArrayList<Invitation> datas) {
+                    campaign.setInvitations(datas);
+                    mAdapter.notifyItemChanged(position);
+                }
+
+                @Override
+                public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                }
+            });
+        }
     }
 
     public void clearSelection(){
         mAdapter.setmDataset(new ArrayList<CampaignModel>());
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void initData(){
+        EventCampaignService.getMyAcceptedCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
+            @Override
+            public void onSuccess(ArrayList<CampaignModel> datas) {
+                onCampaignLoaded(datas);
+            }
+
+            @Override
+            public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+            }
+        });
+    }
+
+    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
+        if(campaigns != null) {
+            for (CampaignModel campaign : campaigns) {
+                addEventToCalendar(campaign);
+            }
+            calendarView.state().edit().commit();
+        }
     }
 
     private void initRecycler(View view, ViewGroup container){
@@ -75,13 +129,13 @@ public class AgendaFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(myDataset);
+        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void initCalendar(View view){
         calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
-        final AgendaDecorator decorator = new AgendaDecorator();
+        decorator = new AgendaDecorator();
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -98,6 +152,10 @@ public class AgendaFragment extends Fragment {
 //        CalendarDay today = CalendarDay.from(Calendar.getInstance());
 //        decorator.addEvent(today, EventFactory.createEvent());
         calendarView.addDecorator(decorator);
+    }
+
+    private void addEventToCalendar(CampaignModel campaign){
+        decorator.addEvent(campaign.getClosedDate(), campaign);
     }
 
 }

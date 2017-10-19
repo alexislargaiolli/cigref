@@ -5,12 +5,14 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 import com.sherpa.mynelis.cigref.model.common.Links;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 
-public class CampaignModel implements Serializable{
+public class CampaignModel implements Serializable {
 
     private static final String TAG = "CampaignModel";
 
@@ -29,7 +31,7 @@ public class CampaignModel implements Serializable{
     private String description;
 
     @SerializedName("event_date")
-    private Date eventDate;
+    private String eventDate;
 
     @SerializedName("start_date")
     private Date startDate;
@@ -58,13 +60,18 @@ public class CampaignModel implements Serializable{
     @SerializedName("entity_type")
     private String entityType;
 
+    private transient Invitation myInvitation;
+
+    private transient ArrayList<Invitation> invitations = new ArrayList<>();
 
     /**
      * Constructeurs
      */
-    public CampaignModel() { this(0, 0, null, "", "", new Date(), new Date(), new Date(), "", "", "", "", "", null, ""); }
+    public CampaignModel() {
+        this(0, 0, null, "", "", "", new Date(), new Date(), "", "", "", "", "", null, "");
+    }
 
-    public CampaignModel(int idLocal, int idNelis, CampaignTypeModel type, String title, String description, Date eventDate, Date startDate, Date closedDate, String eventPlace, String eventOrganizer, String status, String dateCreation, String dateUpdate, Links links, String entityType) {
+    public CampaignModel(int idLocal, int idNelis, CampaignTypeModel type, String title, String description, String eventDate, Date startDate, Date closedDate, String eventPlace, String eventOrganizer, String status, String dateCreation, String dateUpdate, Links links, String entityType) {
         this.idLocal = idLocal;
         this.idNelis = idNelis;
         this.type = type;
@@ -80,6 +87,7 @@ public class CampaignModel implements Serializable{
         this.dateUpdate = dateUpdate;
         this.links = links;
         this.entityType = entityType;
+        this.invitations =  new ArrayList<>();
     }
 
     /**
@@ -87,25 +95,24 @@ public class CampaignModel implements Serializable{
      */
     public void consolePrint() {
         Log.d(TAG, "---------------CAMPAIGN----------------");
-        Log.d(TAG, "ID : "+idLocal);
-        Log.d(TAG, "IDNELIS : "+idNelis);
-        if(type != null)
+        Log.d(TAG, "ID : " + idLocal);
+        Log.d(TAG, "IDNELIS : " + idNelis);
+        if (type != null)
             type.consolePrint();
-        Log.d(TAG, "TITLE : "+title);
-        Log.d(TAG, "DESCRIPTION : "+description);
-        Log.d(TAG, "EVENTDATE : "+eventDate);
-        Log.d(TAG, "EVENTPLACE : "+eventPlace);
-        Log.d(TAG, "EVENTORGANIZER : "+eventOrganizer);
-        Log.d(TAG, "STARTDATE : "+startDate);
-        Log.d(TAG, "CLOSEDDATE : "+closedDate);
-        Log.d(TAG, "STATUS : "+status);
-        Log.d(TAG, "DATECREATION : "+dateCreation);
-        Log.d(TAG, "DATEUPDATE : "+dateUpdate);
-        if(links != null)
+        Log.d(TAG, "TITLE : " + title);
+        Log.d(TAG, "DESCRIPTION : " + description);
+        Log.d(TAG, "EVENTDATE : " + eventDate);
+        Log.d(TAG, "EVENTPLACE : " + eventPlace);
+        Log.d(TAG, "EVENTORGANIZER : " + eventOrganizer);
+        Log.d(TAG, "STARTDATE : " + startDate);
+        Log.d(TAG, "CLOSEDDATE : " + closedDate);
+        Log.d(TAG, "STATUS : " + status);
+        Log.d(TAG, "DATECREATION : " + dateCreation);
+        Log.d(TAG, "DATEUPDATE : " + dateUpdate);
+        if (links != null)
             links.consolePrint();
-        Log.d(TAG, "ENTITYTYPE : "+entityType);
+        Log.d(TAG, "ENTITYTYPE : " + entityType);
     }
-
 
 
     /**
@@ -153,11 +160,11 @@ public class CampaignModel implements Serializable{
         this.description = description;
     }
 
-    public Date getEventDate() {
+    public String getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
     }
 
@@ -231,5 +238,21 @@ public class CampaignModel implements Serializable{
 
     public void setEntityType(String entityType) {
         this.entityType = entityType;
+    }
+
+    public Invitation getMyInvitation() {
+        return myInvitation;
+    }
+
+    public void setMyInvitation(Invitation myInvitation) {
+        this.myInvitation = myInvitation;
+    }
+
+    public ArrayList<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(ArrayList<Invitation> invitations) {
+        this.invitations = invitations;
     }
 }
