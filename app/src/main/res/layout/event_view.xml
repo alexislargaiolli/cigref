@@ -58,16 +58,21 @@
                         android:id="@+id/noButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:background="@android:color/white"
-                        card_view:srcCompat="@mipmap/ic_no_off" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/event_details_not_go_button"
+                        android:contentDescription="@string/event_details_ic_not_go"/>
 
                     <ImageButton
                         android:id="@+id/yesButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        card_view:srcCompat="@mipmap/ic_yes_off" />
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/event_details_ic_go"
+                        android:src="@drawable/event_details_go_button" />
+
                 </LinearLayout>
 
                 <LinearLayout

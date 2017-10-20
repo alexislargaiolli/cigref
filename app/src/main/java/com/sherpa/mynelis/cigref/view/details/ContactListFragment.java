@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 
 import java.util.ArrayList;
@@ -19,8 +17,7 @@ import java.util.ArrayList;
  * A fragment representing a list of Items.
  */
 public class ContactListFragment extends Fragment {
-
-    private CampaignModel mEvent;
+    private ArrayList<Invitation> mInvitations;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -34,7 +31,7 @@ public class ContactListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mEvent = (CampaignModel) getArguments().getSerializable(EventDetailsFragment.EVENT_ARGUMENT_KEY);
+            mInvitations = (ArrayList<Invitation>) getArguments().getSerializable(EventDetailsFragment.INVITATIONS_ARGUMENT_KEY);
         }
     }
 
@@ -53,7 +50,6 @@ public class ContactListFragment extends Fragment {
 
     public void updateContactList(RecyclerView recyclerView){
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-        ArrayList<Invitation> invitations = mEvent.getInvitations() != null ? mEvent.getInvitations() : new ArrayList<Invitation>();
-        recyclerView.setAdapter(new ContactListRecyclerViewAdapter(invitations, getContext()));
+        recyclerView.setAdapter(new ContactListRecyclerViewAdapter(mInvitations, getContext()));
     }
 }

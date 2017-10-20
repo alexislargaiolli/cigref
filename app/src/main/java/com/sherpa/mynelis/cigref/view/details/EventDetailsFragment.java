@@ -26,10 +26,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sherpa.mynelis.cigref.view.events.InvitationStatusEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,21 +43,30 @@ import java.util.Locale;
  * A simple {@link Fragment} subclass.
  */
 public class EventDetailsFragment extends Fragment implements OnMapReadyCallback {
-    public static String EVENT_ARGUMENT_KEY = "event";
+    public static final String EVENT_ARGUMENT_KEY = "event";
+    public static final String INVITATIONS_ARGUMENT_KEY = "invitations";
+    public static final String MY_INVITATION_ARGUMENT_KEY = "my_invitation";
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     private View mRootView;
     private CampaignModel mEvent = null;
+    private ArrayList<Invitation> mInvitations = null;
+    private Invitation mMyInvitation = null;
     private TextView mSeeMore;
     private MapView mMapView;
+    private TextView eventIsRegistered;
+    private ImageButton goButton;
+    private ImageButton notGoButton;
 
+    private InvitationStatusEventListener invitationStatusEventListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         mEvent = (CampaignModel) bundle.getSerializable(EVENT_ARGUMENT_KEY);
-
+        mInvitations = (ArrayList<Invitation>) bundle.getSerializable(INVITATIONS_ARGUMENT_KEY);
+        mMyInvitation = (Invitation) bundle.getSerializable(MY_INVITATION_ARGUMENT_KEY);
     }
 
     @Override
@@ -60,11 +74,19 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_event_details, container, false);
 
-        ImageView eventImage = (ImageView) mRootView.findViewById(R.id.eventDetailsImage);
-        TextView eventTitle = (TextView) mRootView.findViewById(R.id.eventDetailsTitle);
-        TextView eventType = (TextView) mRootView.findViewById(R.id.eventDetailsType);
+        this.initMapView(savedInstanceState);
+        this.updateInvitationInfo();
 
+        this.setHeaderEventInfo();
+        this.setContactList();
+        this.setRegisteredButtons();
+        this.setMailSendButton();
+        this.setEventDetails();
 
+        return mRootView;
+    }
+
+    private void initMapView(Bundle savedInstanceState) {
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
         // objects or sub-Bundles.
@@ -77,29 +99,36 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         mMapView.getMapAsync(this);
         GoogleMapOptions options = new GoogleMapOptions();
         options.scrollGesturesEnabled(false);
-
-//        Picasso.with(getContext()).load(mEvent.getImageUrl()).into(eventImage);
-        eventTitle.setText(mEvent.getTitle());
-        eventType.setText(mEvent.getType().getLabelFr());
-
-        this.updateInvitationInfo();
-        this.setContactList();
-        this.setRegisteredButtons();
-        this.setMailSendButton();
-        this.setEventDetails();
-
-        return mRootView;
     }
 
     private void updateInvitationInfo() {
-        int invitationCount = mEvent.getInvitations() != null ? mEvent.getInvitations().size() : 0;
         TextView eventRegisteredCount = (TextView) mRootView.findViewById(R.id.eventDetailsRegisteredCount);
-        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, invitationCount));
+        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mInvitations.size()));
+    }
+
+    private void setHeaderEventInfo() {
+        final ImageView eventImage = (ImageView) mRootView.findViewById(R.id.eventDetailsImage);
+        TextView eventTitle = (TextView) mRootView.findViewById(R.id.eventDetailsTitle);
+        TextView eventType = (TextView) mRootView.findViewById(R.id.eventDetailsType);
+        System.out.println(mEvent.getPosterUrl());
+        Picasso.with(getContext()).load(mEvent.getPosterUrl()).into(eventImage, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                eventImage.setImageResource(R.drawable.forum);
+            }
+        });
+        eventTitle.setText(mEvent.getTitle());
+        eventType.setText(mEvent.getType().getLabelFr());
     }
 
     private void setContactList() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(EVENT_ARGUMENT_KEY, mEvent);
+        bundle.putSerializable(INVITATIONS_ARGUMENT_KEY, mInvitations);
 
         ContactListFragment contactListFragment = new ContactListFragment();
         contactListFragment.setArguments(bundle);
@@ -109,31 +138,26 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void setRegisteredButtons() {
-        final SlidingUpPanelLayout slidingUpPanelLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.eventDetails);
-        final TextView eventIsRegistered = (TextView) mRootView.findViewById(R.id.eventDetailsIsRegistered);
-        final ImageButton goButton = (ImageButton) mRootView.findViewById(R.id.eventDetailsGo);
-        final ImageButton notGoButton = (ImageButton) mRootView.findViewById(R.id.eventDetailsNotGo);
+//        final SlidingUpPanelLayout slidingUpPanelLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.eventDetails);
+        eventIsRegistered = (TextView) mRootView.findViewById(R.id.eventDetailsIsRegistered);
+        goButton = (ImageButton) mRootView.findViewById(R.id.eventDetailsGo);
+        notGoButton = (ImageButton) mRootView.findViewById(R.id.eventDetailsNotGo);
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                getFragmentManager().beginTransaction().addToBackStack(InvitationFragment.BACK_STACK_OPENED_NAME).commit();
+                invitationStatusEventListener.onUpdateInvitationStatus(mMyInvitation, InvitationStatus.ACCEPTED);
             }
         });
 
         notGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO call API NOT GO
-                goButton.setSelected(false);
-                notGoButton.setSelected(true);
-                eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
+                invitationStatusEventListener.onUpdateInvitationStatus(mMyInvitation, InvitationStatus.REFUSED);
             }
         });
 
-//        if (mEvent.isRegistered()) {
-        if (true) {
+        if (mMyInvitation != null && mMyInvitation.getStatus().equals(InvitationStatus.ACCEPTED)) {
             goButton.setSelected(true);
             notGoButton.setSelected(false);
             eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
@@ -141,10 +165,22 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
             goButton.setSelected(false);
             notGoButton.setSelected(false);
             eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
-//            if (mEvent.isNotGo()) {
-//                notGoButton.setSelected(true);
-//            }
+            if (mMyInvitation != null && mMyInvitation.getStatus().equals(InvitationStatus.REFUSED)) {
+                notGoButton.setSelected(true);
+            }
         }
+    }
+
+    /**
+     * Update yes button, no button and guest count message based on a given invitation status
+     *
+     * @param status the user invitation status
+     */
+    protected void setInvitationInfo(final InvitationStatus status) {
+        goButton.setSelected(InvitationStatus.ACCEPTED.equals(status));
+        notGoButton.setSelected(InvitationStatus.REFUSED.equals(status));
+        int messageId = status != null && status.equals(InvitationStatus.ACCEPTED) ? R.string.event_details_you_are_registered : R.string.event_details_are_you_going;
+        eventIsRegistered.setText(getString(messageId));
     }
 
     private void setMailSendButton() {
@@ -189,17 +225,16 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         TextView eventAnimator = (TextView) mRootView.findViewById(R.id.eventDetailsAnimator);
         LinearLayout animatorContainerView = (LinearLayout) mRootView.findViewById(R.id.animatorContainerView);
 
-        if(mEvent.getDescription() != null && !mEvent.getDescription().isEmpty()){
-        eventDescription.setText(mEvent.getDescription());
-        eventDescription.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        showHideSeeMore(eventDescription);
-                    }
-                });
-        }
-        else {
+        if (mEvent.getDescription() != null && !mEvent.getDescription().isEmpty()) {
+            eventDescription.setText(mEvent.getDescription());
+            eventDescription.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            showHideSeeMore(eventDescription);
+                        }
+                    });
+        } else {
             LinearLayout descriptionContainerView = (LinearLayout) mRootView.findViewById(R.id.descriptionContainerView);
             descriptionContainerView.setVisibility(View.GONE);
         }
@@ -215,10 +250,6 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
         } else {
             dateContainerView.setVisibility(View.GONE);
         }
-//        eventAddressStreet.setText(mEvent.getEventAdress().getStreet());
-//        eventAddressCity.setText(mEvent.getEventAdress().getPostalCodeWithCity());
-//        eventDate.setText(mEvent.getEventDate().getDate());
-//        eventDateTime.setText(mEvent.getEventDate().getTime());
 
         if (mEvent.getEventOrganizer() != null && !mEvent.getEventOrganizer().isEmpty()) {
             String animateBy = getString(R.string.event_details_animate_by) + " " + mEvent.getEventOrganizer();
@@ -310,5 +341,33 @@ public class EventDetailsFragment extends Fragment implements OnMapReadyCallback
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    public void setInvitationStatusEventListener(InvitationStatusEventListener invitationStatusEventListener) {
+        this.invitationStatusEventListener = invitationStatusEventListener;
+    }
+
+    public CampaignModel getmEvent() {
+        return mEvent;
+    }
+
+    public void setmEvent(CampaignModel mEvent) {
+        this.mEvent = mEvent;
+    }
+
+    public ArrayList<Invitation> getmInvitations() {
+        return mInvitations;
+    }
+
+    public void setmInvitations(ArrayList<Invitation> mInvitations) {
+        this.mInvitations = mInvitations;
+    }
+
+    public Invitation getmMyInvitation() {
+        return mMyInvitation;
+    }
+
+    public void setmMyInvitation(Invitation mMyInvitation) {
+        this.mMyInvitation = mMyInvitation;
     }
 }

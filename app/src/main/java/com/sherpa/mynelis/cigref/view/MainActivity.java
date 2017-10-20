@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
+import com.sherpa.mynelis.cigref.view.events.InvitationStatusEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        changeFragment(new EventsFragment(), getResources().getString(R.string.title_events));
-
+        changeFragment( new EventsFragment(), getResources().getString(R.string.title_events));
     }
 
     private void changeFragment(Fragment fragment, String title){

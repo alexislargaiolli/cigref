@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
+import com.sherpa.mynelis.cigref.service.UtilsService;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,7 @@ public class EventByPopularityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private EventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private InvitationStatusEventListener invitationStatusEventListener;
 
     public EventByPopularityFragment() { }
 
@@ -45,8 +49,7 @@ public class EventByPopularityFragment extends Fragment {
         EventCampaignService.getMyCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
             @Override
             public void onSuccess(ArrayList<CampaignModel> datas) {
-                mAdapter.setmDataset(datas);
-                mAdapter.notifyDataSetChanged();
+                onCampaignLoaded(datas);
             }
 
             @Override
@@ -54,6 +57,41 @@ public class EventByPopularityFragment extends Fragment {
 
             }
         });
+    }
+
+    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
+        if(campaigns != null) {
+            mAdapter.setmDataset(campaigns);
+            mAdapter.notifyDataSetChanged();
+            for (int i = 0; i < campaigns.size(); i++) {
+                final CampaignModel campaign = campaigns.get(i);
+                final int position = i;
+                EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
+                    @Override
+                    public void onSuccess(Invitation datas) {
+                        campaign.setMyInvitation(datas);
+                        mAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                    }
+                });
+                EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Invitation> datas) {
+                        campaign.setInvitations(datas);
+                        mAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+                    }
+                });
+            }
+        }
     }
 
     private void initRecycler(View view, ViewGroup container){
@@ -77,10 +115,39 @@ public class EventByPopularityFragment extends Fragment {
             }
 
             @Override
-            public void onInvitationStatusChanged(CampaignModel eventCampaign, boolean accepted) {
+            public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
+                EventCampaignService.updateInvitationStatus(eventCampaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
+                    @Override
+                    public void onSuccess(Invitation datas) {
+                        mAdapter.getmDataset().get(position).setMyInvitation(datas);
 
+                        if (InvitationStatus.ACCEPTED.equals(status)) {
+                            mAdapter.getmDataset().get(position).addInvitation(datas);
+                            EventServices.showEventRegisterSuccessAlert(getContext(), eventCampaign);
+                        }
+                        else{
+                            mAdapter.getmDataset().get(position).removeInvitation(datas);
+                        }
+
+                        mAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onError(ServiceReponseErrorType error, String errorMessage) {
+//                        eventDetailsFragment.setInvitationInfo(previousStatus);
+                        UtilsService.showErrorAlert(getContext(), getString(R.string.error_invitation_update));
+                    }
+                });
             }
         });
+    }
+
+    public InvitationStatusEventListener getInvitationStatusEventListener() {
+        return invitationStatusEventListener;
+    }
+
+    public void setInvitationStatusEventListener(InvitationStatusEventListener invitationStatusEventListener) {
+        this.invitationStatusEventListener = invitationStatusEventListener;
     }
 
 }

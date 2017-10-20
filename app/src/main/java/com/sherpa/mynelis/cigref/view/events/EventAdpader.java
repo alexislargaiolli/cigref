@@ -44,7 +44,7 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     public EventAdpader(ArrayList<CampaignModel> myDataset) {
 
         mDataset = myDataset;
-        if(mDataset == null){
+        if (mDataset == null) {
             mDataset = new ArrayList<CampaignModel>();
         }
     }
@@ -69,40 +69,38 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     }
 
     private void initItem(View cardView, final int position, String eventName, int guestCount, Date eventDate, String eventType, Invitation myInvitation) {
-        ((TextView) cardView.findViewById(R.id.eventName)).setText(eventName);
+        ImageButton yesButton = (ImageButton) cardView.findViewById(R.id.yesButton);
+        ImageButton noButton = (ImageButton) cardView.findViewById(R.id.noButton);
+        TextView eventTitleLabel = (TextView) cardView.findViewById(R.id.eventName);
+        TextView eventGuestCountLabel = (TextView) cardView.findViewById(R.id.eventGuestCount);
+        TextView eventMonthLabel = (TextView) cardView.findViewById(R.id.eventMonth);
+        TextView eventDayLabel = (TextView) cardView.findViewById(R.id.eventDay);
 
-        String guestLabel = String.format(GUEST_COUNT_FORMAT, guestCount);
-        ((TextView) cardView.findViewById(R.id.eventGuestCount)).setText(guestLabel);
-        ((TextView) cardView.findViewById(R.id.eventName)).setText(eventName);
 
-        String monthFormat = String.format(EVENT_MONTH_FORMAT, eventDate);
-        ((TextView) cardView.findViewById(R.id.eventMonth)).setText(monthFormat);
+        // Set label text values
+        eventTitleLabel.setText(eventName);
+        eventGuestCountLabel.setText(String.format(GUEST_COUNT_FORMAT, guestCount));
+        eventMonthLabel.setText(String.format(EVENT_MONTH_FORMAT, eventDate));
+        eventDayLabel.setText(String.format(EVENT_DAY_FORMAT, eventDate));
 
-        String dayFormat = String.format(EVENT_DAY_FORMAT, eventDate);
-        ((TextView) cardView.findViewById(R.id.eventDay)).setText(dayFormat);
+        // Set yes / no button status
+        yesButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED);
+        noButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.REFUSED);
 
-        if (myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED) {
-            ((ImageButton) cardView.findViewById(R.id.yesButton)).setImageResource(R.mipmap.ic_yes_on);
-        }
-        if (myInvitation != null && myInvitation.getStatus() == InvitationStatus.REFUSED) {
-            ((ImageButton) cardView.findViewById(R.id.noButton)).setImageResource(R.mipmap.ic_no_on);
-        }
-
-        ((ImageButton) cardView.findViewById(R.id.noButton)).setOnClickListener(new View.OnClickListener() {
+        // Attach listener to buttons
+        noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onChangeInvitationStatus(position, false);
+                onChangeInvitationStatus(position, InvitationStatus.REFUSED);
             }
         });
-
-        ((ImageButton) cardView.findViewById(R.id.yesButton)).setOnClickListener(new View.OnClickListener() {
+        yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                onChangeInvitationStatus(position, false);
+                onChangeInvitationStatus(position, InvitationStatus.ACCEPTED);
             }
         });
-
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,12 +113,11 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
      * Handler call after invitation has been accept or refused
      *
      * @param position index of the event in the dataset
-     * @param accept   true if invitation has been accepted, false otherwise
+     * @param status new status of the invitation
      */
-    private void onChangeInvitationStatus(int position, boolean accept) {
-        System.out.println(accept ? "Accept " : "Refuse " + mDataset.get(position));
-        if(eventListener != null){
-            eventListener.onInvitationStatusChanged(mDataset.get(position), accept);
+    private void onChangeInvitationStatus(int position, InvitationStatus status) {
+        if (eventListener != null) {
+            eventListener.onInvitationStatusChanged(position, mDataset.get(position), status);
         }
     }
 
@@ -131,12 +128,11 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
      */
     private void onEventSelected(int position) {
         System.out.println("Event selected  " + mDataset.get(position));
-        if(eventListener != null){
+        if (eventListener != null) {
             eventListener.onEventSelected(mDataset.get(position));
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataset.size();
@@ -154,8 +150,9 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
         this.eventListener = eventListener;
     }
 
-    public interface EventListener{
+    public interface EventListener {
         public void onEventSelected(CampaignModel eventCampaign);
-        public void onInvitationStatusChanged(CampaignModel eventCampaign, boolean accepted);
+
+        public void onInvitationStatusChanged(int position, CampaignModel eventCampaign, InvitationStatus status);
     }
 }

@@ -55,7 +55,7 @@ public class CampaignModel implements Serializable {
     private String dateUpdate;
 
     @SerializedName("_links")
-    private Links links;
+    private CampaignModelLinks links;
 
     @SerializedName("entity_type")
     private String entityType;
@@ -71,7 +71,7 @@ public class CampaignModel implements Serializable {
         this(0, 0, null, "", "", "", new Date(), new Date(), "", "", "", "", "", null, "");
     }
 
-    public CampaignModel(int idLocal, int idNelis, CampaignTypeModel type, String title, String description, String eventDate, Date startDate, Date closedDate, String eventPlace, String eventOrganizer, String status, String dateCreation, String dateUpdate, Links links, String entityType) {
+    public CampaignModel(int idLocal, int idNelis, CampaignTypeModel type, String title, String description, String eventDate, Date startDate, Date closedDate, String eventPlace, String eventOrganizer, String status, String dateCreation, String dateUpdate, CampaignModelLinks links, String entityType) {
         this.idLocal = idLocal;
         this.idNelis = idNelis;
         this.type = type;
@@ -88,6 +88,43 @@ public class CampaignModel implements Serializable {
         this.links = links;
         this.entityType = entityType;
         this.invitations =  new ArrayList<>();
+    }
+
+    public void addInvitation(Invitation invit){
+        if(invitations == null){
+            invitations = new ArrayList<Invitation>();
+        }
+        int invitPosition = -1;
+        for (int i = 0; i < this.invitations.size(); i++) {
+            if(invitations.get(i).getId() == invit.getId()){
+                invitPosition = i;
+            }
+        }
+        if(invitPosition != -1){
+            invitations.set(invitPosition, invit);
+        }
+        else{
+            invitations.add(invit);
+        }
+    }
+
+    public void removeInvitation(Invitation invit){
+        int invitPosition = -1;
+        for (int i = 0; i < this.invitations.size(); i++) {
+            if(invitations.get(i).getId() == invit.getId()){
+                invitPosition = i;
+            }
+        }
+        if(invitPosition != -1){
+            invitations.remove(invitPosition);
+        }
+    }
+
+    public String getPosterUrl(){
+        if(links == null){
+            return null;
+        }
+        return links.getPosterUrl();
     }
 
     /**
@@ -110,10 +147,32 @@ public class CampaignModel implements Serializable {
         Log.d(TAG, "DATECREATION : " + dateCreation);
         Log.d(TAG, "DATEUPDATE : " + dateUpdate);
         if (links != null)
-            links.consolePrint();
+            Log.d(TAG, links.toString());
         Log.d(TAG, "ENTITYTYPE : " + entityType);
     }
 
+    @Override
+    public String toString() {
+        return "CampaignModel{" +
+                "idLocal=" + idLocal +
+                ", idNelis=" + idNelis +
+                ", type=" + type +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", startDate=" + startDate +
+                ", closedDate=" + closedDate +
+                ", eventPlace='" + eventPlace + '\'' +
+                ", eventOrganizer='" + eventOrganizer + '\'' +
+                ", status='" + status + '\'' +
+                ", dateCreation='" + dateCreation + '\'' +
+                ", dateUpdate='" + dateUpdate + '\'' +
+                ", links=" + links +
+                ", entityType='" + entityType + '\'' +
+                ", myInvitation=" + myInvitation +
+                ", invitations=" + invitations +
+                '}';
+    }
 
     /**
      * Getters & setters
@@ -224,11 +283,11 @@ public class CampaignModel implements Serializable {
         this.dateUpdate = dateUpdate;
     }
 
-    public Links getLinks() {
+    public CampaignModelLinks getLinks() {
         return links;
     }
 
-    public void setLinks(Links links) {
+    public void setLinks(CampaignModelLinks links) {
         this.links = links;
     }
 

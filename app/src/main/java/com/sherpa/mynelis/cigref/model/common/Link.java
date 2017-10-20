@@ -29,6 +29,13 @@ public class Link implements Serializable {
         return hrefSub.replaceAll("[^0-9]", "");
     }
 
+    @Override
+    public String toString() {
+        return "Link{" +
+                "href='" + href + '\'' +
+                '}';
+    }
+
     /* Getters & setters */
     public String getHref() {
         return this.href;

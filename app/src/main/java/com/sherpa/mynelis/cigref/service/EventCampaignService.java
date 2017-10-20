@@ -4,6 +4,8 @@ import com.sherpa.mynelis.cigref.api.NelisInterface;
 import com.sherpa.mynelis.cigref.api.ServiceGenerator;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatusPatch;
 
 import java.util.ArrayList;
 
@@ -88,6 +90,22 @@ public class EventCampaignService {
         NelisInterface client = ServiceGenerator.createNelisClient();
         Call<Invitation> invitations = client.getMyCampaignInvitation(campaignId, AuthenticationService.getmToken().getAccessToken());
         invitations.enqueue(new Callback<Invitation>() {
+            @Override
+            public void onResponse(Call<Invitation> call, Response<Invitation> response) {
+                responseEvent.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Invitation> call, Throwable t) {
+                responseEvent.onError(ServiceResponse.ServiceReponseErrorType.NETWORK, t.getMessage());
+            }
+        });
+    }
+
+    public static void updateInvitationStatus(int invitationId, InvitationStatus status, final ServiceResponse<Invitation> responseEvent){
+        NelisInterface client = ServiceGenerator.createNelisClient();
+        Call<Invitation> invitation = client.updateInvitationStatus(invitationId, AuthenticationService.getmToken().getAccessToken(), new InvitationStatusPatch(status));
+        invitation.enqueue(new Callback<Invitation>() {
             @Override
             public void onResponse(Call<Invitation> call, Response<Invitation> response) {
                 responseEvent.onSuccess(response.body());

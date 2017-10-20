@@ -10,14 +10,14 @@ import com.sherpa.mynelis.cigref.R;
 
 public class EventTabAdapter extends FragmentPagerAdapter {
     Context ctxt=null;
-    EventByDateFragment byDate;
-    EventByPopularityFragment byPop;
+    EventByDateFragment eventByDateFragment;
+    EventByPopularityFragment eventByPopularityFragment;
 
     public EventTabAdapter(Context ctxt, FragmentManager mgr) {
         super(mgr);
         this.ctxt=ctxt;
-        byDate = new EventByDateFragment();
-        byPop = new EventByPopularityFragment();
+        eventByDateFragment = new EventByDateFragment();
+        eventByPopularityFragment = new EventByPopularityFragment();
     }
 
     @Override
@@ -29,9 +29,9 @@ public class EventTabAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0 :
-                return byDate;
+                return eventByDateFragment;
             case 1 :
-                return byPop;
+                return eventByPopularityFragment;
         }
         return null;
     }
@@ -47,5 +47,21 @@ public class EventTabAdapter extends FragmentPagerAdapter {
                 return ctxt.getResources().getString(R.string.title_event_bypopularity);
         }
         return null;
+    }
+
+    public EventByDateFragment getEventByDateFragment() {
+        return eventByDateFragment;
+    }
+
+    public void setEventByDateFragment(EventByDateFragment eventByDateFragment) {
+        this.eventByDateFragment = eventByDateFragment;
+    }
+
+    public EventByPopularityFragment getEventByPopularityFragment() {
+        return eventByPopularityFragment;
+    }
+
+    public void setEventByPopularityFragment(EventByPopularityFragment eventByPopularityFragment) {
+        this.eventByPopularityFragment = eventByPopularityFragment;
     }
 }

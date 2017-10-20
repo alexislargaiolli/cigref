@@ -44,7 +44,7 @@
 
     <string name="general_see_more">Voir plus</string>
     <string name="general_close">Fermer</string>
-    <string name="transfert_mail_content_html"><p>Bonjour,</p><p>Je pense que cet événement du CIGREF pourrait vous intéresser : </p><p>%1$s</p><p>%2$s</p><p>Lieu : %3$s </p><p>Date : %4$s </p><p>Pour demander à vous inscrire à cet événement contactez le CIGREF à l’adresse suivante : <a href="mailto:cigref@cigref.fr">cigref@cigref.fr</a></p></string>
+    <string name="transfert_mail_content_html">&lt;p>Bonjour,&lt;/p>&lt;p>Je pense que cet événement du CIGREF pourrait vous intéresser : &lt;/p>&lt;p>%1$s&lt;/p>&lt;p>%2$s&lt;/p>&lt;p>Lieu : %3$s &lt;/p>&lt;p>Date : %4$s &lt;/p>&lt;p>Pour demander à vous inscrire à cet événement contactez le CIGREF à l’adresse suivante : &lt;a> href=\"mailto:cigref@cigref.fr\">cigref@cigref.fr&lt;/a>&lt;/p></string>
     <string name="transfert_mail_content_plain">Bonjour,\n\nJe pense que cet événement du CIGREF pourrait vous intéresser : \n\n%1$s\n\n%2$s\n\nLieu : %3$s \n\nDate : %4$s \n\nPour demander à vous inscrire à cet événement contactez le CIGREF à l’adresse suivante : cigref@cigref.fr</string>
     <string name="transfert_mail_title">Invitation événement %1$s</string>
     <string name="transfert_mail_chooser">Envoyer un email avec :</string>
@@ -53,4 +53,10 @@
     <string name="sp_user_domain">user_domain</string>
     <string name="error_login_failed">Identifiants invalides</string>
     <string name="error_login_timeout">Temps d\'attente dépassé...</string>
+    <string name="error_invitation_update">Une erreur de connexion est survenue pendant le traitement de votre requête. Veuillez réessayer.</string>
+    <string name="error_alert_title">Erreur</string>
+    <string name="event_register_success_title">Vous êtes inscrit</string>
+    <string name="event_register_success_message">Souhaitez-vous ajouter cet événement dans l\'agenda ?</string>
+    <string name="event_register_success_yes">Oui</string>
+    <string name="event_register_success_no">Non merci</string>
 </resources>
