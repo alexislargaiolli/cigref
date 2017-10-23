@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
@@ -58,7 +59,7 @@ public class EventByPopularityFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
-                campaignViewModel.changeInvitationStatus(eventCampaign, status);
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status);
             }
         });
 

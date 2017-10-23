@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
@@ -53,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class EventDetailsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class EventDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String EVENT_ARGUMENT_KEY = "event";
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -74,15 +75,16 @@ public class EventDetailsActivity extends FragmentActivity implements OnMapReady
 
         Intent intent = getIntent();
         mEvent = (CampaignModel) intent.getSerializableExtra(EVENT_ARGUMENT_KEY);
+        System.out.println("Init value "+mEvent.getInvitations().size());
         EventsFragment frag = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.event_main_fragment);
         campaignViewModel = ViewModelProviders.of(this).get(CampaignEventViewModel.class);
-//        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-//            mEvent = Stream.of(campaignModels)
-//                    .filter(c -> c.getIdNelis() == eventId)
-//                    .findFirst()
-//                    .get();
-//
-//        });
+        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+            System.out.println("EventDetailsActivity observe");
+            mEvent = campaignModels.stream().filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
+            System.out.println("Updated "+mEvent.getInvitations().size());
+            this.updateInvitationInfo();
+            this.setRegisteredButtons();
+        });
 
         this.initMapView(savedInstanceState);
         this.updateInvitationInfo();
@@ -91,38 +93,9 @@ public class EventDetailsActivity extends FragmentActivity implements OnMapReady
         this.setRegisteredButtons();
         this.setMailSendButton();
         this.setEventDetails();
-//        final EventDetailsFragment eventDetailsFragment = new EventDetailsFragment();
-//        eventDetailsFragment.setArguments(bundle);
-//        eventDetailsFragment.setInvitationStatusEventListener(new InvitationStatusEventListener() {
-//            @Override
-//            public void onUpdateInvitationStatus(Invitation invitation, final InvitationStatus status) {
-//                final InvitationStatus previousStatus = status;
-//                eventDetailsFragment.setInvitationInfo(status);
-//                EventCampaignService.getInstance().updateInvitationStatus(mMyInvitation.getId(), status, new ServiceResponse<Invitation>() {
-//                    @Override
-//                    public void onSuccess(Invitation datas) {
-//                        mMyInvitation = datas;
-//                        eventDetailsFragment.setmMyInvitation(datas);
-//                        if(InvitationStatus.ACCEPTED.equals(status)) {
-//                            EventServices.showEventRegisterSuccessAlert(EventDetailsActivity.this, mEvent);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-//                        eventDetailsFragment.setInvitationInfo(previousStatus);
-//                        UtilsService.showErrorAlert(EventDetailsActivity.this, getString(R.string.error_invitation_update));
-//                    }
-//                });
-//            }
-//        });
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.eventDetailsContainer, eventDetailsFragment).commit();
-////                .add(R.id.eventDetailsInvitationContainer, invitationFragment).commit();
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
     }
 
     private void initMapView(Bundle savedInstanceState) {
@@ -182,14 +155,14 @@ public class EventDetailsActivity extends FragmentActivity implements OnMapReady
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                campaignViewModel.changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED);
+                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED);
             }
         });
 
         notGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                campaignViewModel.changeInvitationStatus(mEvent, InvitationStatus.REFUSED);
+                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.REFUSED);
             }
         });
 

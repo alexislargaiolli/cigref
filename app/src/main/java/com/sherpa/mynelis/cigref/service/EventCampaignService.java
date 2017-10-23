@@ -1,6 +1,8 @@
 package com.sherpa.mynelis.cigref.service;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.sherpa.mynelis.cigref.api.NelisInterface;
@@ -27,6 +29,8 @@ public class EventCampaignService {
 
     private static final String TAG = "EventCampaignService";
 
+
+
     private static EventCampaignService instance;
 
     private EventCampaignService(){
@@ -38,7 +42,6 @@ public class EventCampaignService {
       * @param responseEvent
      */
     public void getMyCampaigns(final ServiceResponse<List<CampaignModel>> responseEvent) {
-        System.out.println("getMyCampaigns");
         NelisInterface client = ServiceGenerator.createNelisClient();
         Call<List<CampaignModel>> campaigns = client.getMyCampaigns(AuthenticationService.getInstance().getmToken().getAccessToken());
         campaigns.enqueue(new Callback<List<CampaignModel>>() {

@@ -19,7 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<ContactListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Invitation> mContacts;
+    private List<Invitation> mContacts;
     private Context mContext;
 
     public ContactListRecyclerViewAdapter(List<Invitation> items, Context context) {
@@ -43,6 +43,14 @@ public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<Contact
     @Override
     public int getItemCount() {
         return mContacts.size();
+    }
+
+    public List<Invitation> getmContacts() {
+        return mContacts;
+    }
+
+    public void setmContacts(List<Invitation> mContacts) {
+        this.mContacts = mContacts;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

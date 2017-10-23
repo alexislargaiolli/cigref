@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class ContactListFragment extends Fragment {
     private CampaignModel mEvent;
+    private CampaignEventViewModel campaignViewModel;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,10 +42,19 @@ public class ContactListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_details_contact_list, container, false);
         mEvent = (CampaignModel) getArguments().getSerializable(EventDetailsActivity.EVENT_ARGUMENT_KEY);
+        campaignViewModel = ViewModelProviders.of(this).get(CampaignEventViewModel.class);
         // Set the adapter
         if (view instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) view;
-            updateContactList(recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            ContactListRecyclerViewAdapter adapter = new ContactListRecyclerViewAdapter(mEvent.getInvitations(), getContext());
+            recyclerView.setAdapter(adapter);
+            campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+                System.out.println("ContactListFragment");
+                mEvent = campaignModels.stream().filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
+                adapter.setmContacts(mEvent.getInvitations());
+                adapter.notifyDataSetChanged();
+            });
         }
         return view;
     }
