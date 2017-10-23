@@ -1,7 +1,10 @@
 package com.sherpa.mynelis.cigref.view.events;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Stream;
+import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
@@ -16,9 +21,9 @@ import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
-import com.sherpa.mynelis.cigref.service.UtilsService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,10 +31,8 @@ import java.util.ArrayList;
  */
 public class EventByPopularityFragment extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private EventAdpader mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private InvitationStatusEventListener invitationStatusEventListener;
+    private CampaignEventAdpader mAdapter;
+    private CampaignEventViewModel campaignViewModel;
 
     public EventByPopularityFragment() { }
 
@@ -39,76 +42,15 @@ public class EventByPopularityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_event_by_popularity, container, false);
 
-        initRecycler(view, container);
-        initData();
-
-        return view;
-    }
-
-    private void initData(){
-        EventCampaignService.getMyCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
-            @Override
-            public void onSuccess(ArrayList<CampaignModel> datas) {
-                onCampaignLoaded(datas);
-            }
-
-            @Override
-            public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-            }
-        });
-    }
-
-    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
-        if(campaigns != null) {
-            mAdapter.setmDataset(campaigns);
-            mAdapter.notifyDataSetChanged();
-            for (int i = 0; i < campaigns.size(); i++) {
-                final CampaignModel campaign = campaigns.get(i);
-                final int position = i;
-                EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
-                    @Override
-                    public void onSuccess(Invitation datas) {
-                        campaign.setMyInvitation(datas);
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                    }
-                });
-                EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
-                    @Override
-                    public void onSuccess(ArrayList<Invitation> datas) {
-                        campaign.setInvitations(datas);
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                    }
-                });
-            }
-        }
-    }
-
-    private void initRecycler(View view, ViewGroup container){
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_by_pop);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_by_pop);
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(container.getContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
+        mAdapter = new CampaignEventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setEventListener(new EventAdpader.EventListener() {
+        mAdapter.setEventListener(new CampaignEventAdpader.EventListener() {
             @Override
             public void onEventSelected(CampaignModel eventCampaign) {
                 EventServices.goToEventDetail(getContext(), eventCampaign);
@@ -116,38 +58,20 @@ public class EventByPopularityFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
-                EventCampaignService.updateInvitationStatus(eventCampaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
-                    @Override
-                    public void onSuccess(Invitation datas) {
-                        mAdapter.getmDataset().get(position).setMyInvitation(datas);
-
-                        if (InvitationStatus.ACCEPTED.equals(status)) {
-                            mAdapter.getmDataset().get(position).addInvitation(datas);
-                            EventServices.showEventRegisterSuccessAlert(getContext(), eventCampaign);
-                        }
-                        else{
-                            mAdapter.getmDataset().get(position).removeInvitation(datas);
-                        }
-
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-//                        eventDetailsFragment.setInvitationInfo(previousStatus);
-                        UtilsService.showErrorAlert(getContext(), getString(R.string.error_invitation_update));
-                    }
-                });
+                campaignViewModel.changeInvitationStatus(eventCampaign, status);
             }
         });
-    }
 
-    public InvitationStatusEventListener getInvitationStatusEventListener() {
-        return invitationStatusEventListener;
-    }
+        campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
+        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+            List<CampaignModel> sortedCampaigns =
+                    Stream.of(campaignModels)
+                            .sortBy(CampaignModel::getNegativeGuestCount)
+                            .toList();
+            mAdapter.setmDataset(sortedCampaigns);
+            mAdapter.notifyDataSetChanged();
+        });
 
-    public void setInvitationStatusEventListener(InvitationStatusEventListener invitationStatusEventListener) {
-        this.invitationStatusEventListener = invitationStatusEventListener;
+        return view;
     }
-
 }

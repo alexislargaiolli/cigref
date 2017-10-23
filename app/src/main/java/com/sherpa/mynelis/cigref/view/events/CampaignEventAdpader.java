@@ -14,13 +14,13 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Alexis Largaiolli on 16/10/2017.
  */
-
-public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> {
-    private ArrayList<CampaignModel> mDataset;
+public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpader.ViewHolder> {
+    private List<CampaignModel> mDataset;
     private static final String EVENT_DAY_FORMAT = "%1$td";
     private static final String EVENT_MONTH_FORMAT = "%1$tb";
     private static String GUEST_COUNT_FORMAT;
@@ -41,8 +41,7 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventAdpader(ArrayList<CampaignModel> myDataset) {
-
+    public CampaignEventAdpader(List<CampaignModel> myDataset) {
         mDataset = myDataset;
         if (mDataset == null) {
             mDataset = new ArrayList<CampaignModel>();
@@ -51,7 +50,7 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
 
     // Create new views (invoked by the layout manager)
     @Override
-    public EventAdpader.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CampaignEventAdpader.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_view, parent, false);
         // set the view's size, margins, paddings and layout parameters
@@ -138,11 +137,11 @@ public class EventAdpader extends RecyclerView.Adapter<EventAdpader.ViewHolder> 
         return mDataset.size();
     }
 
-    public ArrayList<CampaignModel> getmDataset() {
+    public List<CampaignModel> getmDataset() {
         return mDataset;
     }
 
-    public void setmDataset(ArrayList<CampaignModel> dataset) {
+    public void setmDataset(List<CampaignModel> dataset) {
         mDataset = dataset;
     }
 

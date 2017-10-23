@@ -18,12 +18,9 @@ import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
-import com.sherpa.mynelis.cigref.view.events.EventAdpader;
-import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.EventFactory;
+import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -34,7 +31,7 @@ public class AgendaFragment extends Fragment {
 
     MaterialCalendarView calendarView;
     private RecyclerView mRecyclerView;
-    private EventAdpader mAdapter;
+    private CampaignEventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<CampaignModel> myDataset;
     private AgendaDecorator decorator;
@@ -62,7 +59,7 @@ public class AgendaFragment extends Fragment {
         for (int i = 0; i < campaigns.size(); i++) {
             final CampaignModel campaign = campaigns.get(i);
             final int position = i;
-            EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
+            EventCampaignService.getInstance().getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
                 @Override
                 public void onSuccess(Invitation datas) {
                     campaign.setMyInvitation(datas);
@@ -74,9 +71,9 @@ public class AgendaFragment extends Fragment {
 
                 }
             });
-            EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
+            EventCampaignService.getInstance().getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<List<Invitation>>() {
                 @Override
-                public void onSuccess(ArrayList<Invitation> datas) {
+                public void onSuccess(List<Invitation> datas) {
                     campaign.setInvitations(datas);
                     mAdapter.notifyItemChanged(position);
                 }
@@ -95,9 +92,9 @@ public class AgendaFragment extends Fragment {
     }
 
     private void initData(){
-        EventCampaignService.getMyAcceptedCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
+        EventCampaignService.getInstance().getMyAcceptedCampaigns(new ServiceResponse<List<CampaignModel>>() {
             @Override
-            public void onSuccess(ArrayList<CampaignModel> datas) {
+            public void onSuccess(List<CampaignModel> datas) {
                 onCampaignLoaded(datas);
             }
 
@@ -108,7 +105,7 @@ public class AgendaFragment extends Fragment {
         });
     }
 
-    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
+    private void onCampaignLoaded(List<CampaignModel> campaigns) {
         if(campaigns != null) {
             for (CampaignModel campaign : campaigns) {
                 addEventToCalendar(campaign);
@@ -129,7 +126,7 @@ public class AgendaFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
+        mAdapter = new CampaignEventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
     }
 

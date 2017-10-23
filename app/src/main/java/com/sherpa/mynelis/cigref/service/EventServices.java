@@ -1,29 +1,18 @@
 package com.sherpa.mynelis.cigref.service;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
-import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.view.details.EventDetailsActivity;
-import com.sherpa.mynelis.cigref.view.details.EventDetailsFragment;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by Alexis Largaiolli on 18/10/2017.
@@ -62,9 +51,9 @@ public class EventServices {
      */
     public static void goToEventDetail(Context context, CampaignModel event) {
         Intent intent = new Intent(context, EventDetailsActivity.class);
-        intent.putExtra(EventDetailsFragment.EVENT_ARGUMENT_KEY, event);
-        intent.putExtra(EventDetailsFragment.INVITATIONS_ARGUMENT_KEY, event.getInvitations() != null ? event.getInvitations() : new ArrayList<Invitation>());
-        intent.putExtra(EventDetailsFragment.MY_INVITATION_ARGUMENT_KEY, event.getMyInvitation());
+        intent.putExtra(EventDetailsActivity.EVENT_ARGUMENT_KEY, event);
+//        intent.putExtra(EventDetailsFragment.INVITATIONS_ARGUMENT_KEY, event.getInvitations());
+//        intent.putExtra(EventDetailsFragment.MY_INVITATION_ARGUMENT_KEY, event.getMyInvitation());
         context.startActivity(intent);
     }
 

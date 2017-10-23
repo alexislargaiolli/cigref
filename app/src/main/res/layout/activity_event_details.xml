@@ -30,23 +30,234 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <!--<com.sothree.slidinguppanel.SlidingUpPanelLayout-->
-        <!--android:id="@+id/eventDetails"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="bottom">-->
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-
-        <FrameLayout
-            android:id="@+id/eventDetailsContainer"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <!--<FrameLayout-->
-            <!--android:id="@+id/eventDetailsInvitationContainer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
+            <ImageView
+                android:id="@+id/eventDetailsImage"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginBottom="5dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/event_details_image_description"
+                android:scaleType="centerCrop" />
 
-    <!--</com.sothree.slidinguppanel.SlidingUpPanelLayout>-->
+            <!-- MAIN INFORMATION -->
+            <LinearLayout
+                android:id="@+id/eventDetailsMainInformation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp">
+
+                <TextView
+                    android:id="@+id/eventDetailsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/eventDetailsType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+                <!-- Contact list-->
+                <FrameLayout
+                    android:id="@+id/eventDetailsRegisteredList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <!-- END - Contact list-->
+
+                <TextView
+                    android:id="@+id/eventDetailsRegisteredCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:gravity="center_vertical|end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/eventDetailsIsRegistered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/event_details_are_you_going" />
+
+                    <ImageButton
+                        android:id="@+id/eventDetailsNotGo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/event_details_not_go_button"
+                        android:contentDescription="@string/event_details_ic_not_go"/>
+
+                    <ImageButton
+                        android:id="@+id/eventDetailsGo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/event_details_go_button"
+                        android:contentDescription="@string/event_details_ic_go"/>
+
+                    <ImageButton
+                        android:id="@+id/eventDetailsSendMail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/event_details_mail_button"
+                        android:contentDescription="@string/event_details_ic_mail"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- SEPARATOR -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp" />
+
+            <!-- GLOBAL INFORMATION -->
+            <LinearLayout
+                android:id="@+id/EventDetailsGlobalInformation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp">
+
+                <LinearLayout
+                    android:id="@+id/descriptionContainerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/eventDetailsDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="4" />
+
+                    <TextView
+                        android:id="@+id/eventDetailsShowDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/general_see_more"
+                        android:textColor="@android:color/holo_blue_light" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/placeContainerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|start"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/event_details_ic_map"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_event_details_address" />
+
+                    <TextView
+                        android:id="@+id/eventDetailsAddressName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dateContainerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|start"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/event_details_ic_clock"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_event_details_clock" />
+
+                    <TextView
+                        android:id="@+id/eventDetailsDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/animatorContainerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|start"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/event_details_ic_animator"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_event_details_animator" />
+
+                    <TextView
+                        android:id="@+id/eventDetailsAnimator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

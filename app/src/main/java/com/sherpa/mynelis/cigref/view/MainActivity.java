@@ -1,5 +1,6 @@
 package com.sherpa.mynelis.cigref.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,7 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
+import com.sherpa.mynelis.cigref.view.details.EventDetailsFragment;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
 import com.sherpa.mynelis.cigref.view.events.InvitationStatusEventListener;
 
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        changeFragment( new EventsFragment(), getResources().getString(R.string.title_events));
+        changeFragment(new EventsFragment(), getResources().getString(R.string.title_events));
     }
 
     private void changeFragment(Fragment fragment, String title){
@@ -55,7 +59,4 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
     }
-
-
-
 }

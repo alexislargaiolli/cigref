@@ -28,9 +28,14 @@ public class AuthenticationService {
     private static final String PREFERENCE_USERNAME_KEY = "ovASzcPyS3";
     private static final String PREFERENCE_PASSWORD_KEY = "wGDqgbqxR3";
 
-    private static AccessToken mToken;
+    private static AuthenticationService instance;
+    private AccessToken mToken;
 
-    public static boolean login(String username, String password) throws LoginTimeout {
+    private AuthenticationService(){
+
+    }
+
+    public boolean login(String username, String password) throws LoginTimeout {
         NelisInterface client = ServiceGenerator.createNelisClient();
         Call<AccessToken> call = client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, password);
         try {
@@ -41,12 +46,12 @@ public class AuthenticationService {
         return mToken != null;
     }
 
-    public static void logout(Context context) {
+    public void logout(Context context) {
         mToken = null;
         removeStoredCredentials(context);
     }
 
-    public static void storeCredential(Context context, String username, String password) {
+    public void storeCredential(Context context, String username, String password) {
         SecretKey key = getSecretKey(context);
         Crypto crypto = new Crypto(Options.TRANSFORMATION_SYMMETRIC);
 
@@ -62,7 +67,7 @@ public class AuthenticationService {
         editor.commit();
     }
 
-    public static Credentials loadCredential(Context context) {
+    public Credentials loadCredential(Context context) {
         // Load encrypted credentials
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_KEY, Context.MODE_PRIVATE);
         String encryptedUsername = sharedPref.getString(PREFERENCE_USERNAME_KEY, null);
@@ -84,7 +89,7 @@ public class AuthenticationService {
         return new Credentials(username, password);
     }
 
-    public static void removeStoredCredentials(Context context) {
+    private void removeStoredCredentials(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREFERENCE_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(PREFERENCE_USERNAME_KEY);
@@ -92,7 +97,7 @@ public class AuthenticationService {
         editor.commit();
     }
 
-    private static SecretKey getSecretKey(Context context) {
+    private SecretKey getSecretKey(Context context) {
         Store store = new Store(context);
         SecretKey key = null;
         if (!store.hasKey(SIGN_KEY)) {
@@ -101,8 +106,14 @@ public class AuthenticationService {
         return store.getSymmetricKey(SIGN_KEY, null);
     }
 
-    public static AccessToken getmToken() {
+    public AccessToken getmToken() {
         return mToken;
     }
 
+    public static AuthenticationService getInstance() {
+        if(instance == null){
+            instance = new AuthenticationService();
+        }
+        return instance;
+    }
 }

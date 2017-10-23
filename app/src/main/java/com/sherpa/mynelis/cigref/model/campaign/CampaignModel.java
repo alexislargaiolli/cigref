@@ -10,6 +10,7 @@ import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class CampaignModel implements Serializable {
@@ -60,9 +61,9 @@ public class CampaignModel implements Serializable {
     @SerializedName("entity_type")
     private String entityType;
 
-    private transient Invitation myInvitation;
+    private Invitation myInvitation;
 
-    private transient ArrayList<Invitation> invitations = new ArrayList<>();
+    private List<Invitation> invitations = new ArrayList<>();
 
     /**
      * Constructeurs
@@ -125,6 +126,14 @@ public class CampaignModel implements Serializable {
             return null;
         }
         return links.getPosterUrl();
+    }
+
+    public int getGuestCount(){
+        return invitations.size();
+    }
+
+    public int getNegativeGuestCount(){
+        return invitations.size() * -1;
     }
 
     /**
@@ -307,11 +316,11 @@ public class CampaignModel implements Serializable {
         this.myInvitation = myInvitation;
     }
 
-    public ArrayList<Invitation> getInvitations() {
+    public List<Invitation> getInvitations() {
         return invitations;
     }
 
-    public void setInvitations(ArrayList<Invitation> invitations) {
+    public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
     }
 }

@@ -45,4 +45,8 @@ public class ServiceGenerator {
         }
         return nelisClient;
     }
+
+    public static Retrofit getRetrofit() {
+        return retrofit;
+    }
 }

@@ -5,6 +5,8 @@ import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatusPatch;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -32,13 +34,13 @@ public interface NelisInterface {
 
 
     @GET("api/v4/eventcampaigns/me/invited")
-    Call<ArrayList<CampaignModel>> getMyCampaigns(@Query("access_token") String accessToken);
+    Call<List<CampaignModel>> getMyCampaigns(@Query("access_token") String accessToken);
 
     @GET("api/v4/eventcampaigns/me/accepted")
-    Call<ArrayList<CampaignModel>> getMyAcceptedCampaigns(@Query("access_token") String accessToken);
+    Call<List<CampaignModel>> getMyAcceptedCampaigns(@Query("access_token") String accessToken);
 
     @GET("api/v4/eventcampaigns/{campaignId}/invitations")
-    Call<ArrayList<Invitation>> getCampaignInvitations(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);
+    Call<List<Invitation>> getCampaignInvitations(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);
 
     @GET("api/v4/eventcampaigns/{campaignId}/invitations/me")
     Call<Invitation> getMyCampaignInvitation(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);

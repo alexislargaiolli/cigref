@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        Credentials credentials = AuthenticationService.loadCredential(getApplicationContext());
+        Credentials credentials = AuthenticationService.getInstance().loadCredential(getApplicationContext());
         if(credentials != null){
             mEmailView.setText(credentials.getUsername());
             mPasswordView.setText(credentials.getPassword());
@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void storeCredential(String email, String password){
-        AuthenticationService.storeCredential(getApplicationContext(), email, password);
+        AuthenticationService.getInstance().storeCredential(getApplicationContext(), email, password);
     }
 
     private boolean isEmailValid(String email) {
@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                return AuthenticationService.login(mEmail, mPassword);
+                return AuthenticationService.getInstance().login(mEmail, mPassword);
             } catch (LoginTimeout loginTimeout) {
                 onLoginTimeout();
             }

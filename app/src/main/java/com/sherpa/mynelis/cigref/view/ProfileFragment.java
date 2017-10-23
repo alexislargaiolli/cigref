@@ -1,6 +1,7 @@
 package com.sherpa.mynelis.cigref.view;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
@@ -22,11 +25,10 @@ import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 import com.sherpa.mynelis.cigref.service.UtilsService;
-import com.sherpa.mynelis.cigref.view.events.EventAdpader;
-import com.sherpa.mynelis.cigref.model.Event;
-import com.sherpa.mynelis.cigref.model.EventFactory;
+import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -34,9 +36,9 @@ import java.util.ArrayList;
  */
 public class ProfileFragment extends Fragment {
 
-
+    private CampaignEventViewModel campaignViewModel;
     private RecyclerView mRecyclerView;
-    private EventAdpader mAdapter;
+    private CampaignEventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public ProfileFragment() {
@@ -61,10 +63,10 @@ public class ProfileFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new EventAdpader(new ArrayList<CampaignModel>());
+        mAdapter = new CampaignEventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter.setEventListener(new EventAdpader.EventListener() {
+        mAdapter.setEventListener(new CampaignEventAdpader.EventListener() {
             @Override
             public void onEventSelected(CampaignModel eventCampaign) {
                 EventServices.goToEventDetail(getContext(), eventCampaign);
@@ -72,7 +74,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
-                EventCampaignService.updateInvitationStatus(eventCampaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
+                EventCampaignService.getInstance().updateInvitationStatus(eventCampaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
                     @Override
                     public void onSuccess(Invitation datas) {
                         mAdapter.getmDataset().get(position).setMyInvitation(datas);
@@ -97,6 +99,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
+        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+            List<CampaignModel> acceptedCampaigns = Stream.of(campaignModels).filter(c-> InvitationStatus.ACCEPTED.equals(c.getMyInvitation().getStatus())).toList();
+            mAdapter.setmDataset(acceptedCampaigns);
+            mAdapter.notifyDataSetChanged();
+        });
+
         ImageButton logoutBtn = (ImageButton) view.findViewById(R.id.logoutButton);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,58 +114,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        initData();
-
         return view;
-    }
-
-    private void initData(){
-        EventCampaignService.getMyAcceptedCampaigns(new ServiceResponse<ArrayList<CampaignModel>>() {
-            @Override
-            public void onSuccess(ArrayList<CampaignModel> datas) {
-                onCampaignLoaded(datas);
-            }
-
-            @Override
-            public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-            }
-        });
-    }
-
-    private void onCampaignLoaded(ArrayList<CampaignModel> campaigns) {
-        if(campaigns != null) {
-            mAdapter.setmDataset(campaigns);
-            mAdapter.notifyDataSetChanged();
-            for (int i = 0; i < campaigns.size(); i++) {
-                final CampaignModel campaign = campaigns.get(i);
-                final int position = i;
-                EventCampaignService.getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
-                    @Override
-                    public void onSuccess(Invitation datas) {
-                        campaign.setMyInvitation(datas);
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                    }
-                });
-                EventCampaignService.getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<ArrayList<Invitation>>() {
-                    @Override
-                    public void onSuccess(ArrayList<Invitation> datas) {
-                        campaign.setInvitations(datas);
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                    }
-                });
-            }
-        }
     }
 
     /**
@@ -179,7 +137,7 @@ public class ProfileFragment extends Fragment {
      * Call when user has confirmed logout
      */
     private void logout(){
-        AuthenticationService.logout(getActivity());
+        AuthenticationService.getInstance().logout(getActivity());
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
     }
