@@ -2,12 +2,14 @@ package com.sherpa.mynelis.cigref.data;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
+import android.content.Context;
 
 import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 
 import java.util.ArrayList;
@@ -87,7 +89,7 @@ public class EventCampaignRepository {
         return campaigns;
     }
 
-    public void changeInvitationStatus(final CampaignModel campaign, InvitationStatus status) {
+    public void changeInvitationStatus(final CampaignModel campaign, InvitationStatus status, Context context) {
         // Keep previous state to restore it if update fail
         final InvitationStatus previousStatus = campaign.getMyInvitation().getStatus();
         //Apply change before making http update
@@ -102,7 +104,9 @@ public class EventCampaignRepository {
         EventCampaignService.getInstance().updateInvitationStatus(campaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
             @Override
             public void onSuccess(Invitation invitation) {
-                // If success do nothing
+                if (InvitationStatus.ACCEPTED.equals(invitation.getStatus())) {
+                    EventServices.showEventRegisterSuccessAlert(context, campaign);
+                }
             }
 
             @Override

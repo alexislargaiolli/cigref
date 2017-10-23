@@ -106,7 +106,7 @@ public class AgendaFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(int position, CampaignModel eventCampaign, InvitationStatus status) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status);
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status, getContext());
             }
         });
     }

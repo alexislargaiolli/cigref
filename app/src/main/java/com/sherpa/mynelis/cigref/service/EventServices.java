@@ -90,7 +90,7 @@ public class EventServices {
     public static void showEventRegisterSuccessAlert(final Context context, final CampaignModel event) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(context, R.style.DialogStyle);
         } else {
             builder = new AlertDialog.Builder(context);
         }

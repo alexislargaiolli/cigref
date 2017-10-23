@@ -61,6 +61,7 @@
                     android:id="@+id/eventDetailsTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textColor2"
                     android:textSize="20sp" />
 
                 <TextView

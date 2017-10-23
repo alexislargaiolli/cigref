@@ -54,7 +54,7 @@ public class EventByDateFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status);
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status, getContext());
             }
         });
 

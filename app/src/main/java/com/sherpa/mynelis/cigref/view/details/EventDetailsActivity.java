@@ -44,6 +44,8 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     public static final String EVENT_ARGUMENT_KEY = "event";
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private static final int DESCRIPTION_EXPANDED_MAX_LINE = 100;
+    private static final int DESCRIPTION_COLLAPSED_MAX_LINE = 4;
 
     private CampaignModel mEvent = null;
     private TextView mSeeMore;
@@ -69,7 +71,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         });
 
         mMapView = (MapView) findViewById(R.id.mapView);
-        if(mEvent.getEventPlace() == null || mEvent.getEventPlace().isEmpty()){
+        if (mEvent.getEventPlace() == null || mEvent.getEventPlace().isEmpty()) {
             mMapView.setVisibility(View.GONE);
         }
 
@@ -152,14 +154,14 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED);
+                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED, EventDetailsActivity.this);
             }
         });
 
         notGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.REFUSED);
+                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.REFUSED, EventDetailsActivity.this);
             }
         });
 
@@ -205,20 +207,19 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     /**
      * Set event description label
      */
-    private void setShowDescriptionDetailAction() {
+    private void setShowDescriptionDetailAction(TextView eventDescription) {
         mSeeMore = (TextView) findViewById(R.id.eventDetailsShowDescription);
         mSeeMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.this);
-                builder.setTitle(mEvent.getTitle()).setMessage(mEvent.getDescription());
-                builder.setPositiveButton(R.string.general_close, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.create().show();
+                if(eventDescription.getMaxLines() == DESCRIPTION_COLLAPSED_MAX_LINE){
+                    eventDescription.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINE);
+                    mSeeMore.setText(getString(R.string.general_see_less));
+                }
+                else{
+                    eventDescription.setMaxLines(DESCRIPTION_COLLAPSED_MAX_LINE);
+                    mSeeMore.setText(getString(R.string.general_see_more));
+                }
             }
         });
     }
@@ -228,7 +229,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
      */
     private void setEventDetails() {
         final TextView eventDescription = (TextView) findViewById(R.id.eventDetailsDescription);
-        this.setShowDescriptionDetailAction();
+        this.setShowDescriptionDetailAction(eventDescription);
 
         TextView eventAddressName = (TextView) findViewById(R.id.eventDetailsAddressName);
         LinearLayout placeContainerView = (LinearLayout) findViewById(R.id.placeContainerView);
@@ -279,10 +280,13 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             int lines = layout.getLineCount();
             if (lines > 0) {
                 int ellipsisCount = layout.getEllipsisCount(lines - 1);
-                if (ellipsisCount > 0) {
-                    mSeeMore.setVisibility(View.VISIBLE);
-                } else {
-                    mSeeMore.setVisibility(View.INVISIBLE);
+                int maxLine = eventDescription.getMaxLines();
+                if(maxLine != DESCRIPTION_EXPANDED_MAX_LINE) {
+                    if (ellipsisCount > 0) {
+                        mSeeMore.setVisibility(View.VISIBLE);
+                    } else {
+                        mSeeMore.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         }
