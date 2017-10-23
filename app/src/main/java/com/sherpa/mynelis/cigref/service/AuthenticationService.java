@@ -27,11 +27,12 @@ public class AuthenticationService {
     private static final String PREFERENCE_KEY = "auth_service_preferences";
     private static final String PREFERENCE_USERNAME_KEY = "ovASzcPyS3";
     private static final String PREFERENCE_PASSWORD_KEY = "wGDqgbqxR3";
+    private static final String ACCESS_TOKEN_PARAM = "?access_token=";
 
     private static AuthenticationService instance;
     private AccessToken mToken;
 
-    private AuthenticationService(){
+    private AuthenticationService() {
 
     }
 
@@ -111,9 +112,13 @@ public class AuthenticationService {
     }
 
     public static AuthenticationService getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new AuthenticationService();
         }
         return instance;
+    }
+
+    public String getAccessTokenAsSufix(){
+        return ACCESS_TOKEN_PARAM + getInstance().getmToken().getAccessToken();
     }
 }

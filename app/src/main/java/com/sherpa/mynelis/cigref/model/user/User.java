@@ -18,12 +18,23 @@ public class User implements Serializable{
     @SerializedName("firstname")
     String firstname;
 
+    @SerializedName("_links")
+    UserLinks links;
+
+    public String getPosterUrl(){
+        if(links == null){
+            return null;
+        }
+        return links.getPosterUrl();
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", lastname='" + lastname + '\'' +
                 ", firstname='" + firstname + '\'' +
+                ", links=" + links +
                 '}';
     }
 }

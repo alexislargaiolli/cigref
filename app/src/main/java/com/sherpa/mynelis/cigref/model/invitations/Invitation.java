@@ -22,6 +22,13 @@ public class Invitation implements Serializable {
     @SerializedName("account")
     User user;
 
+    public String getPosterUrl(){
+        if(user == null){
+            return null;
+        }
+        return user.getPosterUrl();
+    }
+
     @Override
     public String toString() {
         return "Invitation{" +

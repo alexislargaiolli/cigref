@@ -104,6 +104,7 @@ public class EventCampaignService {
             @Override
             public void onResponse(Call<List<Invitation>> call, Response<List<Invitation>> response) {
                 if(response.isSuccessful()) {
+                    List<Invitation> invitas = response.body();
                     responseEvent.onSuccess(response.body());
                 }
                 else{

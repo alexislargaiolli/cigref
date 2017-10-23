@@ -116,7 +116,7 @@ public class AgendaFragment extends Fragment {
 
     private void initRecycler(View view, ViewGroup container){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_agenda);
-
+        mRecyclerView.setNestedScrollingEnabled(false);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
