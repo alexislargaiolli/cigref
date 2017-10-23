@@ -1,6 +1,7 @@
 package com.sherpa.mynelis.cigref.view.agenda;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,13 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Stream;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
+import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
@@ -35,6 +41,7 @@ public class AgendaFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<CampaignModel> myDataset;
     private AgendaDecorator decorator;
+    private CampaignEventViewModel campaignViewModel;
 
 
     public AgendaFragment() {
@@ -56,34 +63,6 @@ public class AgendaFragment extends Fragment {
     public void onEventSelected(ArrayList<CampaignModel> campaigns){
         mAdapter.setmDataset(campaigns);
         mAdapter.notifyDataSetChanged();
-        for (int i = 0; i < campaigns.size(); i++) {
-            final CampaignModel campaign = campaigns.get(i);
-            final int position = i;
-            EventCampaignService.getInstance().getMyCampaignInvitation(campaign.getIdNelis(), new ServiceResponse<Invitation>() {
-                @Override
-                public void onSuccess(Invitation datas) {
-                    campaign.setMyInvitation(datas);
-                    mAdapter.notifyItemChanged(position);
-                }
-
-                @Override
-                public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                }
-            });
-            EventCampaignService.getInstance().getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<List<Invitation>>() {
-                @Override
-                public void onSuccess(List<Invitation> datas) {
-                    campaign.setInvitations(datas);
-                    mAdapter.notifyItemChanged(position);
-                }
-
-                @Override
-                public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-                }
-            });
-        }
     }
 
     public void clearSelection(){
@@ -92,16 +71,10 @@ public class AgendaFragment extends Fragment {
     }
 
     private void initData(){
-        EventCampaignService.getInstance().getMyAcceptedCampaigns(new ServiceResponse<List<CampaignModel>>() {
-            @Override
-            public void onSuccess(List<CampaignModel> datas) {
-                onCampaignLoaded(datas);
-            }
-
-            @Override
-            public void onError(ServiceReponseErrorType error, String errorMessage) {
-
-            }
+        campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
+        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+            onCampaignLoaded(campaignModels);
+            mAdapter.notifyDataSetChanged();
         });
     }
 
@@ -117,17 +90,25 @@ public class AgendaFragment extends Fragment {
     private void initRecycler(View view, ViewGroup container){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_agenda);
         mRecyclerView.setNestedScrollingEnabled(false);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
         mAdapter = new CampaignEventAdpader(new ArrayList<CampaignModel>());
         mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setEventListener(new CampaignEventAdpader.EventListener() {
+            @Override
+            public void onEventSelected(CampaignModel eventCampaign) {
+                EventServices.goToEventDetail(getContext(), eventCampaign);
+            }
+
+            @Override
+            public void onInvitationStatusChanged(int position, CampaignModel eventCampaign, InvitationStatus status) {
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status);
+            }
+        });
     }
 
     private void initCalendar(View view){
@@ -145,9 +126,6 @@ public class AgendaFragment extends Fragment {
                 }
             }
         });
-
-//        CalendarDay today = CalendarDay.from(Calendar.getInstance());
-//        decorator.addEvent(today, EventFactory.createEvent());
         calendarView.addDecorator(decorator);
     }
 

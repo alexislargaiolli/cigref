@@ -24,6 +24,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginEnd="10dp"
             android:scaleType="centerCrop"
             android:src="@mipmap/logo_header"
             android:text="Toolbar Title" />

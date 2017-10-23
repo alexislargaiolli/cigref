@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
@@ -74,28 +75,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
-                EventCampaignService.getInstance().updateInvitationStatus(eventCampaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
-                    @Override
-                    public void onSuccess(Invitation datas) {
-                        mAdapter.getmDataset().get(position).setMyInvitation(datas);
-
-                        if (InvitationStatus.ACCEPTED.equals(status)) {
-                            mAdapter.getmDataset().get(position).addInvitation(datas);
-                            EventServices.showEventRegisterSuccessAlert(getContext(), eventCampaign);
-                        }
-                        else{
-                            mAdapter.getmDataset().get(position).removeInvitation(datas);
-                        }
-
-                        mAdapter.notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onError(ServiceReponseErrorType error, String errorMessage) {
-//                        eventDetailsFragment.setInvitationInfo(previousStatus);
-                        UtilsService.showErrorAlert(getContext(), getString(R.string.error_invitation_update));
-                    }
-                });
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status);
             }
         });
 

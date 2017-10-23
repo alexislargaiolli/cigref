@@ -12,6 +12,7 @@ import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.view.details.EventDetailsActivity;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
 /**
@@ -29,11 +30,13 @@ public class EventServices {
     public static void sendEventByMail(Context context, CampaignModel event) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
 
+        String formattedDate = DateFormat.getDateInstance().format(event.getClosedDate());
+
         String contentPlain = context.getResources().getString(R.string.transfert_mail_content_plain);
-        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), event.getClosedDate());
+        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
 
         String contentHTML = context.getResources().getString(R.string.transfert_mail_content_html);
-        String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getEventPlace(), event.getClosedDate());
+        String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
 
         String title = context.getResources().getString(R.string.transfert_mail_title);
         String formattedTitle = String.format(title, event.getTitle());
@@ -52,8 +55,6 @@ public class EventServices {
     public static void goToEventDetail(Context context, CampaignModel event) {
         Intent intent = new Intent(context, EventDetailsActivity.class);
         intent.putExtra(EventDetailsActivity.EVENT_ARGUMENT_KEY, event);
-//        intent.putExtra(EventDetailsFragment.INVITATIONS_ARGUMENT_KEY, event.getInvitations());
-//        intent.putExtra(EventDetailsFragment.MY_INVITATION_ARGUMENT_KEY, event.getMyInvitation());
         context.startActivity(intent);
     }
 
@@ -65,18 +66,6 @@ public class EventServices {
      * @throws SecurityException
      */
     public static void addEventToCalendar(Context context, CampaignModel event) throws SecurityException {
-//        ContentResolver cr = context.getContentResolver();
-//        ContentValues values = new ContentValues();
-//        Long startTime = event.getClosedDate().getTime();
-//        values.put(CalendarContract.Events.DTSTART, startTime);
-//        values.put(CalendarContract.Events.DURATION, "PT1H");
-////        values.put(Events.DTEND, endMillis);
-//        values.put(CalendarContract.Events.TITLE, event.getTitle());
-//        values.put(CalendarContract.Events.DESCRIPTION, event.getDescription());
-//        values.put(CalendarContract.Events.CALENDAR_ID, 0);
-//        values.put(CalendarContract.Events.EVENT_TIMEZONE, String.valueOf(TimeZone.getDefault()));
-//        cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
         Calendar beginTime = Calendar.getInstance();
         beginTime.setTime(event.getClosedDate());
         Calendar endTime = Calendar.getInstance();
@@ -93,6 +82,11 @@ public class EventServices {
         context.startActivity(intent);
     }
 
+    /**
+     * Show an dialog box after event register success to propose user to add event to phone calendar
+     * @param context
+     * @param event
+     */
     public static void showEventRegisterSuccessAlert(final Context context, final CampaignModel event) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

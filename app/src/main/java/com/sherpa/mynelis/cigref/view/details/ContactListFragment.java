@@ -50,8 +50,7 @@ public class ContactListFragment extends Fragment {
             ContactListRecyclerViewAdapter adapter = new ContactListRecyclerViewAdapter(mEvent.getInvitations(), getContext());
             recyclerView.setAdapter(adapter);
             campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-                System.out.println("ContactListFragment");
-                mEvent = campaignModels.stream().filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
+                mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
                 adapter.setmContacts(mEvent.getInvitations());
                 adapter.notifyDataSetChanged();
             });

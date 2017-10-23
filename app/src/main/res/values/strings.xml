@@ -59,4 +59,5 @@
     <string name="event_register_success_message">Souhaitez-vous ajouter cet événement dans l\'agenda ?</string>
     <string name="event_register_success_yes">Oui</string>
     <string name="event_register_success_no">Non merci</string>
+    <string name="login_is_processing">Connexion en cours...</string>
 </resources>

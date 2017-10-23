@@ -1,24 +1,16 @@
 package com.sherpa.mynelis.cigref.view.details;
 
-import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,24 +25,18 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
-import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
-import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
-import com.sherpa.mynelis.cigref.service.ServiceResponse;
-import com.sherpa.mynelis.cigref.service.UtilsService;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
-import com.sherpa.mynelis.cigref.view.events.InvitationStatusEventListener;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sherpa.mynelis.cigref.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +45,6 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     public static final String EVENT_ARGUMENT_KEY = "event";
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
-    private int eventId;
     private CampaignModel mEvent = null;
     private TextView mSeeMore;
     private MapView mMapView;
@@ -75,18 +60,20 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
         Intent intent = getIntent();
         mEvent = (CampaignModel) intent.getSerializableExtra(EVENT_ARGUMENT_KEY);
-        System.out.println("Init value "+mEvent.getInvitations().size());
         EventsFragment frag = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.event_main_fragment);
         campaignViewModel = ViewModelProviders.of(this).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            System.out.println("EventDetailsActivity observe");
-            mEvent = campaignModels.stream().filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
-            System.out.println("Updated "+mEvent.getInvitations().size());
+            mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
             this.updateInvitationInfo();
             this.setRegisteredButtons();
         });
 
-        this.initMapView(savedInstanceState);
+        mMapView = (MapView) findViewById(R.id.mapView);
+        if(mEvent.getEventPlace() == null || mEvent.getEventPlace().isEmpty()){
+            mMapView.setVisibility(View.GONE);
+        }
+
+        this.initMapView(mMapView, savedInstanceState);
         this.updateInvitationInfo();
         this.setHeaderEventInfo();
         this.setContactList();
@@ -98,7 +85,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    private void initMapView(Bundle savedInstanceState) {
+    private void initMapView(MapView mMapView, Bundle savedInstanceState) {
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
         // objects or sub-Bundles.
@@ -106,18 +93,23 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-        mMapView = (MapView) findViewById(R.id.mapView);
         mMapView.onCreate(mapViewBundle);
         mMapView.getMapAsync(this);
         GoogleMapOptions options = new GoogleMapOptions();
         options.scrollGesturesEnabled(false);
     }
 
+    /**
+     * Set guest count label text
+     */
     private void updateInvitationInfo() {
         TextView eventRegisteredCount = (TextView) findViewById(R.id.eventDetailsRegisteredCount);
         eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getInvitations().size()));
     }
 
+    /**
+     * Set title, event type and image
+     */
     private void setHeaderEventInfo() {
         final ImageView eventImage = (ImageView) findViewById(R.id.eventDetailsImage);
         TextView eventTitle = (TextView) findViewById(R.id.eventDetailsTitle);
@@ -138,6 +130,9 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         eventType.setText(mEvent.getType().getLabelFr());
     }
 
+    /**
+     * Set the guest pictures
+     */
     private void setContactList() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(EVENT_ARGUMENT_KEY, mEvent);
@@ -146,8 +141,10 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         getSupportFragmentManager().beginTransaction().add(R.id.eventDetailsRegisteredList, contactListFragment).commit();
     }
 
+    /**
+     * Set the accepte / refuse buttons status
+     */
     private void setRegisteredButtons() {
-//        final SlidingUpPanelLayout slidingUpPanelLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.eventDetails);
         eventIsRegistered = (TextView) findViewById(R.id.eventDetailsIsRegistered);
         goButton = (ImageButton) findViewById(R.id.eventDetailsGo);
         notGoButton = (ImageButton) findViewById(R.id.eventDetailsNotGo);
@@ -192,6 +189,9 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         eventIsRegistered.setText(getString(messageId));
     }
 
+    /**
+     * Attach action to send mail button
+     */
     private void setMailSendButton() {
         ImageButton mailSendButton = (ImageButton) findViewById(R.id.eventDetailsSendMail);
         mailSendButton.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +202,9 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
+    /**
+     * Set event description label
+     */
     private void setShowDescriptionDetailAction() {
         mSeeMore = (TextView) findViewById(R.id.eventDetailsShowDescription);
         mSeeMore.setOnClickListener(new View.OnClickListener() {
@@ -220,13 +223,15 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
+    /**
+     * Set organizer, place and date labels
+     */
     private void setEventDetails() {
         final TextView eventDescription = (TextView) findViewById(R.id.eventDetailsDescription);
         this.setShowDescriptionDetailAction();
 
         TextView eventAddressName = (TextView) findViewById(R.id.eventDetailsAddressName);
         LinearLayout placeContainerView = (LinearLayout) findViewById(R.id.placeContainerView);
-
 
         TextView eventDate = (TextView) findViewById(R.id.eventDetailsDate);
         LinearLayout dateContainerView = (LinearLayout) findViewById(R.id.dateContainerView);
@@ -254,8 +259,8 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             placeContainerView.setVisibility(View.GONE);
         }
 
-        if (mEvent.getEventDate() != null && !mEvent.getEventDate().isEmpty()) {
-            eventDate.setText(mEvent.getEventDate());
+        if (mEvent.getClosedDate() != null) {
+            eventDate.setText(DateFormat.getDateInstance().format(mEvent.getClosedDate()));
         } else {
             dateContainerView.setVisibility(View.GONE);
         }
@@ -297,6 +302,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
                             .title(mEvent.getEventPlace()));
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 14));
                 }
+                mMapView.setVisibility(View.VISIBLE);
             }
         } catch (IOException e) {
             e.printStackTrace();
