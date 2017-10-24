@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navigation_events"
         android:icon="@mipmap/ic_events"
-        android:title="@string/title_events" />
+        android:title="@string/title_events"
+        app:showAsAction="always|withText" />
 
     <item
         android:id="@+id/navigation_agenda"
         android:icon="@mipmap/ic_agenda"
-        android:title="@string/title_agenda" />
+        android:title="@string/title_agenda"
+        app:showAsAction="always|withText" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@mipmap/ic_search"
+        android:title="@string/title_search"
+        app:showAsAction="always|withText" />
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@mipmap/ic_profil"
-        android:title="@string/title_profile" />
+        android:title="@string/title_profile"
+        app:showAsAction="always|withText" />
 
 </menu>

@@ -19,6 +19,7 @@
     <string name="title_events">Événements</string>
     <string name="title_agenda">Agenda</string>
     <string name="title_profile">Mon profil</string>
+    <string name="title_search">Recherche</string>
     <string name="title_event_bydate">Par date</string>
     <string name="title_event_bypopularity">Par popularité</string>
     <string name="title_event_bytheme">Par thèmes</string>
@@ -64,4 +65,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="events_empty">Aucun événement</string>
+    <string name="search_textfield_placeholder">Rechercher...</string>
+    <string name="search_help_text">Saisissez des mots pour démarrer votre recherche</string>
+    <string name="search_no_results" >Aucun résultat</string>
+    <string name="search_no_results2">Essayer avec des termes plus généraux</string>
 </resources>

@@ -1,15 +1,28 @@
 package com.sherpa.mynelis.cigref.view.events;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeModel;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
+import com.sherpa.mynelis.cigref.service.EventServices;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,9 +33,13 @@ import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeModel;
  * create an instance of this fragment.
  */
 public class EventBytThemeRecyclerFragment extends Fragment {
-    private static final String ARG_THEME = "theme";
+    public static final String ARG_THEME = "theme";
     private OnEventByThemeFragmentInteractionListener mListener;
     private CampaignTypeModel selectedTheme;
+    private CampaignEventAdpader mAdapter;
+    private CampaignEventViewModel campaignViewModel;
+    private TextView selectedThemeTitle;
+    private TextView emptyMessage;
 
     public EventBytThemeRecyclerFragment() {
 
@@ -54,8 +71,57 @@ public class EventBytThemeRecyclerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_byt_theme_recycler, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_byt_theme_recycler, container, false);
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.event_by_theme_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(container.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        selectedThemeTitle = (TextView) view.findViewById(R.id.selectedThemeTitle);
+        emptyMessage = (TextView) view.findViewById(R.id.emptyMessage);
+
+        mAdapter = new CampaignEventAdpader(new ArrayList<CampaignModel>());
+        mAdapter.setEventListener(new CampaignEventAdpader.EventListener() {
+            @Override
+            public void onEventSelected(CampaignModel eventCampaign) {
+                EventServices.goToEventDetail(getContext(), eventCampaign);
+            }
+
+            @Override
+            public void onInvitationStatusChanged(final int position, final CampaignModel eventCampaign, final InvitationStatus status) {
+                EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status, getContext());
+            }
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
+        campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
+            updateTheme(campaignModels);
+        });
+
+        return view;
+    }
+
+    private void updateTheme(List<CampaignModel> allCampaigns){
+        List<CampaignModel> campaignsByTheme = Stream.of(allCampaigns).
+                filter(c -> c.getType().getIdNelis() == selectedTheme.getIdNelis())
+                .toList();
+        mAdapter.setmDataset(campaignsByTheme);
+        mAdapter.notifyDataSetChanged();
+        selectedThemeTitle.setText(selectedTheme.getLabelFr());
+        if(campaignsByTheme.isEmpty()){
+            emptyMessage.setVisibility(View.VISIBLE);
+        }
+        else{
+            emptyMessage.setVisibility(View.GONE);
+        }
+    }
+
+    public void selectTheme(CampaignTypeModel theme){
+        this.selectedTheme = theme;
+        updateTheme(campaignViewModel.getCampaignsObservable().getValue());
     }
 
 

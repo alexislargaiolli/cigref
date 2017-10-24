@@ -1,10 +1,8 @@
 package com.sherpa.mynelis.cigref.view.events;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.annimon.stream.Stream;
+import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
-import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
-import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
-import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.service.ServiceResponse;
 
 import java.util.ArrayList;
 import java.util.List;

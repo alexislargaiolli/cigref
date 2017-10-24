@@ -9,8 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.utils.BottomNavigationViewHelper;
 import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
+import com.sherpa.mynelis.cigref.view.search.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     changeFragment(new ProfileFragment(), item.getTitle().toString());
                     return true;
+                case R.id.navigation_search:
+                    changeFragment(new SearchFragment(), item.getTitle().toString());
+                    return true;
             }
             return false;
         }
@@ -45,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation_bar);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
+
+
         changeFragment(new EventsFragment(), getResources().getString(R.string.title_events));
     }
 

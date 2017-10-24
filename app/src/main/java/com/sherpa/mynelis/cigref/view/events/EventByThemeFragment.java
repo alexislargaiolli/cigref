@@ -33,7 +33,8 @@ public class EventByThemeFragment extends Fragment implements ThemeListFragment.
     private FrameLayout themeListContainer;
     private RecyclerView mRecyclerView;
     private CampaignTypeModel currentTheme;
-    ThemeListFragment themeListFragment;
+    private EventBytThemeRecyclerFragment eventBytThemeRecyclerFragment;
+            ThemeListFragment themeListFragment;
 
     public EventByThemeFragment() {
 
@@ -92,8 +93,17 @@ public class EventByThemeFragment extends Fragment implements ThemeListFragment.
 //        mAdapter.notifyDataSetChanged();
 //        themeListContainer.setVisibility(View.GONE);
 //        mRecyclerView.setVisibility(View.VISIBLE);
-        EventBytThemeRecyclerFragment frag = EventBytThemeRecyclerFragment.newInstance(theme);
-        getFragmentManager().beginTransaction().replace(R.id.by_theme_container, frag).addToBackStack("Liste").commit();
+
+        if(eventBytThemeRecyclerFragment == null) {
+            eventBytThemeRecyclerFragment = EventBytThemeRecyclerFragment.newInstance(theme);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EventBytThemeRecyclerFragment.ARG_THEME, theme);
+            eventBytThemeRecyclerFragment.setArguments(bundle);
+        }
+        else{
+            eventBytThemeRecyclerFragment.selectTheme(currentTheme);
+        }
+        getFragmentManager().beginTransaction().replace(R.id.by_theme_container, eventBytThemeRecyclerFragment).addToBackStack("Liste").commit();
     }
 
     @Override

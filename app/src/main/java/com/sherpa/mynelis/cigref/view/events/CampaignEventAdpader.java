@@ -74,6 +74,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         TextView eventGuestCountLabel = (TextView) cardView.findViewById(R.id.eventGuestCount);
         TextView eventMonthLabel = (TextView) cardView.findViewById(R.id.eventMonth);
         TextView eventDayLabel = (TextView) cardView.findViewById(R.id.eventDay);
+        TextView eventTypeLabel = (TextView) cardView.findViewById(R.id.eventType);
 
 
         // Set label text values
@@ -81,6 +82,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         eventGuestCountLabel.setText(String.format(GUEST_COUNT_FORMAT, guestCount));
         eventMonthLabel.setText(String.format(EVENT_MONTH_FORMAT, eventDate));
         eventDayLabel.setText(String.format(EVENT_DAY_FORMAT, eventDate));
+        eventTypeLabel.setText(eventType);
 
         // Set yes / no button status
         yesButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED);
