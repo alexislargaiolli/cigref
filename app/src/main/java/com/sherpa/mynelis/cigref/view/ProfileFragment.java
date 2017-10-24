@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements MainActivity.BackNavitationListerner{
 
     private CampaignEventViewModel campaignViewModel;
     private RecyclerView mRecyclerView;
@@ -123,4 +123,8 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 }

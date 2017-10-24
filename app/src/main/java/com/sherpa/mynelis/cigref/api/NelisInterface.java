@@ -1,6 +1,7 @@
 package com.sherpa.mynelis.cigref.api;
 
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeListModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatusPatch;
 
@@ -44,6 +45,9 @@ public interface NelisInterface {
 
     @GET("api/v4/eventcampaigns/{campaignId}/invitations/me")
     Call<Invitation> getMyCampaignInvitation(@Path("campaignId") int campaignId, @Query("access_token") String accessToken);
+
+    @GET("api/v4/lists/44")
+    Call<CampaignTypeListModel> getCampaignTypeList(@Query("access_token") String accessToken);
 
     @PATCH("api/v4/eventcampaigns/invitations/{invitationId}")
     Call<Invitation> updateInvitationStatus(@Path("invitationId") int invitationId, @Query("access_token") String accessToken, @Body InvitationStatusPatch patch);

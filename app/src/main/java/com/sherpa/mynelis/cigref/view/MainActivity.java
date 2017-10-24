@@ -1,6 +1,5 @@
 package com.sherpa.mynelis.cigref.view;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,14 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
-import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
-import com.sherpa.mynelis.cigref.view.details.EventDetailsFragment;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
-import com.sherpa.mynelis.cigref.view.events.InvitationStatusEventListener;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Fragment currentFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -58,5 +55,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
+        currentFragment = fragment;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(currentFragment instanceof BackNavitationListerner){
+            if(((BackNavitationListerner) currentFragment).onBackPressed()){
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
+    public interface BackNavitationListerner{
+        boolean onBackPressed();
     }
 }

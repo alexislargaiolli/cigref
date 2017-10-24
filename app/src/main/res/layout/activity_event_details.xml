@@ -9,27 +9,9 @@
     android:orientation="vertical"
     tools:context=".view.details.EventDetailsActivity">
 
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:titleTextColor="@android:color/white">
-
-        <ImageView
-            android:id="@+id/toolbar_title"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginEnd="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/logo_header"
-            android:text="Toolbar Title" />
-
-    </android.support.v7.widget.Toolbar>
+        layout="@layout/toolbar" />
 
     <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent">

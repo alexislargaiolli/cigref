@@ -6,6 +6,8 @@ import android.content.Context;
 
 import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeListModel;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
@@ -13,6 +15,7 @@ import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,6 +29,7 @@ public class EventCampaignRepository {
     }
 
     private MutableLiveData<List<CampaignModel>> campaigns;
+    private MutableLiveData<CampaignTypeModel[]> themes;
     private List<CampaignModel> campaignModelList;
 
     private EventCampaignRepository() {
@@ -87,6 +91,24 @@ public class EventCampaignRepository {
             }
         });
         return campaigns;
+    }
+
+    public MutableLiveData<CampaignTypeModel[]> loadThemes(){
+        themes = new MutableLiveData<CampaignTypeModel[]>();
+        EventCampaignService.getInstance().getCampaignTypeList(new ServiceResponse<CampaignTypeListModel>() {
+            @Override
+            public void onSuccess(CampaignTypeListModel datas) {
+                if(datas != null && datas.getTypes() != null){
+                    themes.setValue(datas.getTypes());
+                }
+            }
+
+            @Override
+            public void onError(ServiceReponseErrorType error, String errorMessage) {
+
+            }
+        });
+        return themes;
     }
 
     public void changeInvitationStatus(final CampaignModel campaign, InvitationStatus status, Context context) {

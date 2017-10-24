@@ -52,8 +52,7 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:paddingStart="50dp"
-                        android:text="@string/event_guest_count"
-                        android:textAlignment="viewStart" />
+                        android:text="@string/event_guest_count" />
 
                     <ImageButton
                         android:id="@+id/noButton"

@@ -24,6 +24,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.ServiceResponse;
+import com.sherpa.mynelis.cigref.view.MainActivity;
 import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AgendaFragment extends Fragment {
+public class AgendaFragment extends Fragment implements MainActivity.BackNavitationListerner {
 
     MaterialCalendarView calendarView;
     private RecyclerView mRecyclerView;
@@ -133,4 +134,8 @@ public class AgendaFragment extends Fragment {
         decorator.addEvent(campaign.getClosedDate(), campaign);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 }

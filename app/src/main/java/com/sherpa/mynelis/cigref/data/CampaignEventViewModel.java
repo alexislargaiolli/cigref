@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
 
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventCampaignService;
@@ -22,19 +23,22 @@ public class CampaignEventViewModel extends ViewModel {
 
     MutableLiveData<List<CampaignModel>> campaignsObservable;
 
+    MutableLiveData<CampaignTypeModel[]> themesObservable;
+
     public CampaignEventViewModel() {
+    }
+
+    public MutableLiveData<CampaignTypeModel[]> getThemesObservable() {
+        if(themesObservable == null){
+            themesObservable = EventCampaignRepository.getInstance().loadThemes();
+        }
+        return themesObservable;
     }
 
     public LiveData<List<CampaignModel>> getCampaignsObservable() {
         if(campaignsObservable == null){
-            campaignsObservable = new MutableLiveData<List<CampaignModel>>();
-            loadCampaigns();
+            campaignsObservable = EventCampaignRepository.getInstance().fullLoad();
         }
         return campaignsObservable;
     }
-
-    private void loadCampaigns(){
-        campaignsObservable = EventCampaignRepository.getInstance().fullLoad();
-    }
-
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.sherpa.mynelis.cigref.api.NelisInterface;
 import com.sherpa.mynelis.cigref.api.ServiceGenerator;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
+import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeListModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatusPatch;
@@ -167,6 +168,29 @@ public class EventCampaignService {
 
             @Override
             public void onFailure(Call<Invitation> call, Throwable t) {
+                responseEvent.onError(ServiceResponse.ServiceReponseErrorType.NETWORK, t.getMessage());
+            }
+        });
+    }
+
+    public void getCampaignTypeList(final ServiceResponse<CampaignTypeListModel> responseEvent) {
+        NelisInterface client = ServiceGenerator.createNelisClient();
+        Call<CampaignTypeListModel> typeList = client.getCampaignTypeList(AuthenticationService.getInstance().getmToken().getAccessToken());
+        typeList.enqueue(new Callback<CampaignTypeListModel>() {
+            @Override
+            public void onResponse(Call<CampaignTypeListModel> call, Response<CampaignTypeListModel> response) {
+                if(response.isSuccessful()) {
+                    responseEvent.onSuccess(response.body());
+                }
+                else{
+                    APIError error = ErrorUtils.parseError(response);
+                    Log.w(TAG + ".getCampaignTypeList()", error.message());
+                    responseEvent.onError(ServiceResponse.ServiceReponseErrorType.NETWORK, error.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CampaignTypeListModel> call, Throwable t) {
                 responseEvent.onError(ServiceResponse.ServiceReponseErrorType.NETWORK, t.getMessage());
             }
         });

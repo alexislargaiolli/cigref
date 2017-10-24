@@ -11,20 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.invitations.Invitation;
-import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
-import com.sherpa.mynelis.cigref.service.EventCampaignService;
-import com.sherpa.mynelis.cigref.service.EventServices;
-import com.sherpa.mynelis.cigref.service.ServiceResponse;
-import com.sherpa.mynelis.cigref.service.UtilsService;
-import com.sherpa.mynelis.cigref.view.details.EventDetailsActivity;
+import com.sherpa.mynelis.cigref.view.MainActivity;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventsFragment extends Fragment {
+public class EventsFragment extends Fragment implements MainActivity.BackNavitationListerner {
     EventTabAdapter tabAdapter;
+
     public EventsFragment() {
     }
 
@@ -47,5 +42,10 @@ public class EventsFragment extends Fragment {
         tabLayout.setupWithViewPager(mViewPager);
 
         return view;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return tabAdapter.onBackPressed();
     }
 }

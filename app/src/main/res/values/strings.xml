@@ -21,7 +21,7 @@
     <string name="title_profile">Mon profil</string>
     <string name="title_event_bydate">Par date</string>
     <string name="title_event_bypopularity">Par popularité</string>
-    <string name="title_event_bytheme" >Par thèmes</string>
+    <string name="title_event_bytheme">Par thèmes</string>
     <string name="event_guest_count">%1$d DSI inscrits, et vous ?</string>
     <string name="profil_logout">Me déconnecter</string>
     <string name="profil_logout_confirm">Se déconnecter ?</string>
@@ -61,4 +61,7 @@
     <string name="event_register_success_yes">Oui</string>
     <string name="event_register_success_no">Non merci</string>
     <string name="login_is_processing">Connexion en cours...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

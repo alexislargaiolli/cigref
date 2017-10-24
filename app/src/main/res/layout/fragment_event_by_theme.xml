@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.events.EventByThemeFragment">
+
+
+    <FrameLayout
+        android:id="@+id/by_theme_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_by_theme_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        tools:listitem="@layout/event_view">
+
+    </android.support.v7.widget.RecyclerView>
+</FrameLayout>
