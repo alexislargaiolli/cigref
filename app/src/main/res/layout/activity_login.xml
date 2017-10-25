@@ -115,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/login_button"
+                android:capitalize="words"
                 android:fontFamily="@font/robotolight"
                 android:text="@string/action_sign_in_short"
                 android:textColor="@color/colorPrimary"
