@@ -15,8 +15,9 @@
         android:id="@+id/toolbar_logo"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginEnd="10dp"
+        android:contentDescription="Logo Cigref"
         android:scaleType="centerCrop"
         android:src="@mipmap/logo_header" />
 

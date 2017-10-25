@@ -81,7 +81,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="40dp"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:orientation="vertical">
@@ -93,7 +93,8 @@
                             android:layout_weight="1"
                             android:text="Oct"
                             android:textAlignment="center"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/eventDay"
@@ -103,7 +104,7 @@
                             android:text="30"
                             android:textAlignment="center"
                             android:textColor="@color/colorAccent"
-                            android:textSize="30sp" />
+                            android:textSize="35sp" />
 
                     </LinearLayout>
 
@@ -127,7 +128,7 @@
                             android:layout_weight="1"
                             android:text='Michel Serres, "Philosophie du numérique 2017'
                             android:textColor="@color/textColor2"
-                            android:textSize="18sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                 </LinearLayout>

@@ -21,7 +21,7 @@
     </FrameLayout>
 
 
-    <android.support.design.widget.BottomNavigationView
+    <com.sherpa.mynelis.cigref.utils.ExtendedBottomNavigationView
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

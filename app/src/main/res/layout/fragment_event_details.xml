@@ -31,6 +31,7 @@
                 android:id="@+id/eventDetailsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/textColor2"
                 android:textSize="20sp" />
 
             <TextView
@@ -38,8 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textSize="12sp" />
 
             <!-- Contact list-->
             <FrameLayout
@@ -165,7 +165,7 @@
                 <TextView
                     android:id="@+id/eventDetailsAddressName"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_weight="1" />
 
 
@@ -192,7 +192,7 @@
                 <TextView
                     android:id="@+id/eventDetailsDate"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="20dp"
                     android:layout_weight="1" />
 
             </LinearLayout>
@@ -218,7 +218,7 @@
                 <TextView
                     android:id="@+id/eventDetailsAnimator"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="20dp" />
 
             </LinearLayout>
 

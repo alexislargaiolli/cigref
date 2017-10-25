@@ -81,8 +81,10 @@
                     android:drawableLeft="@drawable/ic_id"
                     android:drawablePadding="10dp"
                     android:ems="10"
+                    android:fontFamily="@font/robotothin"
                     android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textSize="15sp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -96,12 +98,14 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_pwd"
                     android:drawablePadding="10dp"
+                    android:fontFamily="@font/robotothin"
                     android:hint="@string/prompt_password"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textSize="15sp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -112,9 +116,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/white"
+                android:fontFamily="@font/robotolight"
                 android:text="@string/action_sign_in_short"
                 android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="normal"
+                tools:textAllCaps="false" />
 
         </LinearLayout>
     </ScrollView>
