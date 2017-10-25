@@ -100,9 +100,8 @@
                     android:drawablePadding="10dp"
                     android:fontFamily="@font/robotothin"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
+                    android:imeActionId="1"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:textSize="15sp" />
@@ -111,11 +110,11 @@
 
             <Button
                 android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
+                style="@android:style/Widget.Material.Button.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/white"
+                android:background="@drawable/login_button"
                 android:fontFamily="@font/robotolight"
                 android:text="@string/action_sign_in_short"
                 android:textColor="@color/colorPrimary"
