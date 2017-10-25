@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class CampaignEventViewModel extends ViewModel {
 
+    MutableLiveData<Boolean> campaignLoading;
+
     MutableLiveData<List<CampaignModel>> campaignsObservable;
 
     MutableLiveData<CampaignTypeModel[]> themesObservable;
@@ -37,8 +39,15 @@ public class CampaignEventViewModel extends ViewModel {
 
     public LiveData<List<CampaignModel>> getCampaignsObservable() {
         if(campaignsObservable == null){
-            campaignsObservable = EventCampaignRepository.getInstance().fullLoad();
+            campaignsObservable = EventCampaignRepository.getInstance().fullLoad(false);
         }
         return campaignsObservable;
+    }
+
+    public MutableLiveData<Boolean> getCampaignLoading() {
+        if(campaignLoading == null){
+            campaignLoading = EventCampaignRepository.getInstance().getCampaignLoading();
+        }
+        return campaignLoading;
     }
 }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class AgendaFragment extends Fragment implements MainActivity.BackNavitat
     private ArrayList<CampaignModel> myDataset;
     private AgendaDecorator decorator;
     private CampaignEventViewModel campaignViewModel;
-
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     public AgendaFragment() {
 
@@ -76,6 +77,9 @@ public class AgendaFragment extends Fragment implements MainActivity.BackNavitat
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             onCampaignLoaded(campaignModels);
             mAdapter.notifyDataSetChanged();
+        });
+        campaignViewModel.getCampaignLoading().observe(this, loading -> {
+            mySwipeRefreshLayout.setRefreshing(loading);
         });
     }
 
@@ -110,6 +114,16 @@ public class AgendaFragment extends Fragment implements MainActivity.BackNavitat
                 EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status, getContext());
             }
         });
+
+        mySwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        EventCampaignRepository.getInstance().fullLoad(true);
+                    }
+                }
+        );
     }
 
     private void initCalendar(View view){

@@ -2,10 +2,14 @@ package com.sherpa.mynelis.cigref.view;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +41,7 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
     private RecyclerView mRecyclerView;
     private CampaignEventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private float bottomNavigationElevation;
 
     public ProfileFragment() {
 
@@ -90,7 +95,40 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
             }
         });
 
+        SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        EventCampaignRepository.getInstance().fullLoad(true);
+                    }
+                }
+        );
+
+        campaignViewModel.getCampaignLoading().observe(this, loading -> {
+            mySwipeRefreshLayout.setRefreshing(loading);
+        });
+
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation_bar);
+            bottomNavigationElevation = navigation.getElevation();
+            navigation.setElevation(0);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation_bar);
+            navigation.setElevation(bottomNavigationElevation);
+        }
     }
 
     /**

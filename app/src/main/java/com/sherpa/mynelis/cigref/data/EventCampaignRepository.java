@@ -28,18 +28,21 @@ public class EventCampaignRepository {
         return ourInstance;
     }
 
+    private MutableLiveData<Boolean> campaignLoading;
     private MutableLiveData<List<CampaignModel>> campaigns;
     private MutableLiveData<CampaignTypeModel[]> themes;
     private List<CampaignModel> campaignModelList;
 
     private EventCampaignRepository() {
         campaigns = new MutableLiveData<List<CampaignModel>>();
+        campaignLoading = new MutableLiveData<Boolean>();
     }
 
-    public MutableLiveData<List<CampaignModel>> fullLoad() {
-        if (campaignModelList != null) {
+    public MutableLiveData<List<CampaignModel>> fullLoad(boolean refresh) {
+        if (campaignModelList != null && !refresh) {
             return campaigns;
         }
+        campaignLoading.setValue(true);
         EventCampaignService.getInstance().getMyCampaigns(new ServiceResponse<List<CampaignModel>>() {
             @Override
             public void onSuccess(List<CampaignModel> datas) {
@@ -58,12 +61,13 @@ public class EventCampaignRepository {
                                 myInvitationRetrived.add(true);
                                 if (invitationsRetrived.size() == totalCampaignCount && myInvitationRetrived.size() == totalCampaignCount) {
                                     campaigns.setValue(campaignModelList);
+                                    campaignLoading.setValue(false);
                                 }
                             }
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-
+                                campaignLoading.setValue(false);
                             }
                         });
                         EventCampaignService.getInstance().getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<List<Invitation>>() {
@@ -73,12 +77,13 @@ public class EventCampaignRepository {
                                 invitationsRetrived.add(true);
                                 if (invitationsRetrived.size() == totalCampaignCount && myInvitationRetrived.size() == totalCampaignCount) {
                                     campaigns.setValue(campaignModelList);
+                                    campaignLoading.setValue(false);
                                 }
                             }
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-
+                                campaignLoading.setValue(false);
                             }
                         });
                     }
@@ -87,7 +92,7 @@ public class EventCampaignRepository {
 
             @Override
             public void onError(ServiceReponseErrorType error, String errorMessage) {
-
+                campaignLoading.setValue(false);
             }
         });
         return campaigns;
@@ -146,4 +151,11 @@ public class EventCampaignRepository {
         });
     }
 
+    public MutableLiveData<Boolean> getCampaignLoading() {
+        return campaignLoading;
+    }
+
+    public void setCampaignLoading(MutableLiveData<Boolean> campaignLoading) {
+        this.campaignLoading = campaignLoading;
+    }
 }

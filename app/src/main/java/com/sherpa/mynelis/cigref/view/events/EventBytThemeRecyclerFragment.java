@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -99,6 +100,20 @@ public class EventBytThemeRecyclerFragment extends Fragment {
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             updateTheme(campaignModels);
+        });
+
+        SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        EventCampaignRepository.getInstance().fullLoad(true);
+                    }
+                }
+        );
+
+        campaignViewModel.getCampaignLoading().observe(this, loading -> {
+            mySwipeRefreshLayout.setRefreshing(loading);
         });
 
         return view;

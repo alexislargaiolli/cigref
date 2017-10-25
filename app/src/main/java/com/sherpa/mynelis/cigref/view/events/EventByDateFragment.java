@@ -4,11 +4,14 @@ package com.sherpa.mynelis.cigref.view.events;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.sherpa.mynelis.cigref.R;
@@ -37,6 +40,8 @@ public class EventByDateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_by_date, container, false);
 
+        TextView emptyMessage = view.findViewById(R.id.emptyMessage);
+
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
@@ -60,14 +65,37 @@ public class EventByDateFragment extends Fragment {
 
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            List<CampaignModel> sortedCampaigns =
-                    Stream.of(campaignModels)
-                            .sortBy(CampaignModel::getClosedDate)
-                            .toList();
-            mAdapter.setmDataset(sortedCampaigns);
-            mAdapter.notifyDataSetChanged();
+            if (campaignModels.isEmpty()) {
+                emptyMessage.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            } else {
+                emptyMessage.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                List<CampaignModel> sortedCampaigns =
+                        Stream.of(campaignModels)
+                                .sortBy(CampaignModel::getClosedDate)
+                                .toList();
+                mAdapter.setmDataset(sortedCampaigns);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        SwipeRefreshLayout mySwipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        EventCampaignRepository.getInstance().fullLoad(true);
+                    }
+                }
+        );
+
+        campaignViewModel.getCampaignLoading().observe(this, loading -> {
+            mySwipeRefreshLayout.setRefreshing(loading);
         });
 
         return view;
     }
+
+
 }
