@@ -31,6 +31,7 @@ import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -82,10 +83,10 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
                 EventCampaignRepository.getInstance().changeInvitationStatus(eventCampaign, status, getContext());
             }
         });
-
+        Date today = new Date();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            List<CampaignModel> acceptedCampaigns = Stream.of(campaignModels).filter(c-> InvitationStatus.ACCEPTED.equals(c.getMyInvitation().getStatus())).toList();
+            List<CampaignModel> acceptedCampaigns = Stream.of(campaignModels).filter(c-> c.getClosedDate().after(today) && InvitationStatus.ACCEPTED.equals(c.getMyInvitation().getStatus())).toList();
             mAdapter.setmDataset(acceptedCampaigns);
             mAdapter.notifyDataSetChanged();
         });

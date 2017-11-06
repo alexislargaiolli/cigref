@@ -23,6 +23,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class EventBytThemeRecyclerFragment extends Fragment {
     private CampaignEventViewModel campaignViewModel;
     private TextView selectedThemeTitle;
     private TextView emptyMessage;
+    private Date today = new Date();
 
     public EventBytThemeRecyclerFragment() {
 
@@ -121,7 +123,7 @@ public class EventBytThemeRecyclerFragment extends Fragment {
 
     private void updateTheme(List<CampaignModel> allCampaigns){
         List<CampaignModel> campaignsByTheme = Stream.of(allCampaigns).
-                filter(c -> c.getType().getIdNelis() == selectedTheme.getIdNelis())
+                filter(c -> c.getClosedDate().after(today) && c.getType().getIdNelis() == selectedTheme.getIdNelis())
                 .toList();
         mAdapter.setmDataset(campaignsByTheme);
         mAdapter.notifyDataSetChanged();

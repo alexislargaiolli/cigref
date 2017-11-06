@@ -37,6 +37,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +55,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private ImageButton goButton;
     private ImageButton notGoButton;
     private CampaignEventViewModel campaignViewModel;
+    private Date today = new Date();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,31 +153,38 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         goButton = (ImageButton) findViewById(R.id.eventDetailsGo);
         notGoButton = (ImageButton) findViewById(R.id.eventDetailsNotGo);
 
-        goButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED, EventDetailsActivity.this);
-            }
-        });
+        if(mEvent.getClosedDate().after(today)) {
+            goButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.ACCEPTED, EventDetailsActivity.this);
+                }
+            });
 
-        notGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.REFUSED, EventDetailsActivity.this);
-            }
-        });
+            notGoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EventCampaignRepository.getInstance().changeInvitationStatus(mEvent, InvitationStatus.REFUSED, EventDetailsActivity.this);
+                }
+            });
 
-        if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.ACCEPTED)) {
-            goButton.setSelected(true);
-            notGoButton.setSelected(false);
-            eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
+            if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.ACCEPTED)) {
+                goButton.setSelected(true);
+                notGoButton.setSelected(false);
+                eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
+            } else {
+                goButton.setSelected(false);
+                notGoButton.setSelected(false);
+                eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
+                if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.REFUSED)) {
+                    notGoButton.setSelected(true);
+                }
+            }
+            goButton.setVisibility(View.VISIBLE);
+            notGoButton.setVisibility(View.VISIBLE);
         } else {
-            goButton.setSelected(false);
-            notGoButton.setSelected(false);
-            eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
-            if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.REFUSED)) {
-                notGoButton.setSelected(true);
-            }
+            goButton.setVisibility(View.GONE);
+            notGoButton.setVisibility(View.GONE);
         }
     }
 

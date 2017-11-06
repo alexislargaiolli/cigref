@@ -21,6 +21,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -62,6 +63,7 @@ public class EventByPopularityFragment extends Fragment {
             }
         });
 
+        Date today = new Date();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             if (campaignModels.isEmpty()) {
@@ -72,6 +74,7 @@ public class EventByPopularityFragment extends Fragment {
                 mRecyclerView.setVisibility(View.VISIBLE);
                 List<CampaignModel> sortedCampaigns =
                         Stream.of(campaignModels)
+                                .filter(c-> c.getClosedDate().after(today))
                                 .sortBy(CampaignModel::getNegativeGuestCount)
                                 .toList();
                 mAdapter.setmDataset(sortedCampaigns);

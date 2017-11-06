@@ -27,6 +27,7 @@ import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +40,7 @@ public class SearchFragment extends Fragment {
     private String searchPattern;
     private LinearLayout noResultView;
     private LinearLayout beforeSearchView;
+    Date today = new Date();
 
     public SearchFragment() {
 
@@ -110,11 +112,11 @@ public class SearchFragment extends Fragment {
         List<CampaignModel> results = null;
         if(text != null && !text.isEmpty() && allCampaigns != null) {
              results = Stream.of(allCampaigns).filter(c -> {
-                return c.getTitle().toLowerCase().contains(text)
+                return c.getClosedDate().after(today) && (c.getTitle().toLowerCase().contains(text)
                         || c.getType().getLabelFr().toLowerCase().contains(text)
                         || (c.getDescription() != null ? c.getDescription().toLowerCase().contains(text) : false)
                         || (c.getEventOrganizer() != null ? c.getEventOrganizer().toLowerCase().contains(text) : false)
-                        || (c.getEventPlace() != null ? c.getEventPlace().toLowerCase().contains(text) : false);
+                        || (c.getEventPlace() != null ? c.getEventPlace().toLowerCase().contains(text) : false));
             }).toList();
         }
         else{

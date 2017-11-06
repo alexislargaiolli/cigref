@@ -35,7 +35,7 @@ public interface NelisInterface {
                                @Field("password") String password);
 
 
-    @GET("/api/v4/eventcampaigns/me/invited/coming")
+    @GET("/api/v4/eventcampaigns/me/invited")
     Call<List<CampaignModel>> getMyCampaigns(@Query("access_token") String accessToken);
 
     @GET("/api/v4/eventcampaigns/me/accepted")

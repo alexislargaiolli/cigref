@@ -25,7 +25,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
     private static final String EVENT_MONTH_FORMAT = "%1$tb";
     private static String GUEST_COUNT_FORMAT;
     private EventListener eventListener;
-
+    private Date today = new Date();
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -84,24 +84,33 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         eventDayLabel.setText(String.format(EVENT_DAY_FORMAT, eventDate));
         eventTypeLabel.setText(eventType);
 
-        // Set yes / no button status
-        yesButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED);
-        noButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.REFUSED);
+        if(eventDate.after(today)) {
 
-        // Attach listener to buttons
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onChangeInvitationStatus(position, InvitationStatus.REFUSED);
-            }
-        });
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // Set yes / no button status
+            yesButton.setVisibility(View.VISIBLE);
+            noButton.setVisibility(View.VISIBLE);
+            yesButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED);
+            noButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.REFUSED);
 
-                onChangeInvitationStatus(position, InvitationStatus.ACCEPTED);
-            }
-        });
+            // Attach listener to buttons
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onChangeInvitationStatus(position, InvitationStatus.REFUSED);
+                }
+            });
+            yesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    onChangeInvitationStatus(position, InvitationStatus.ACCEPTED);
+                }
+            });
+        } else {
+            yesButton.setVisibility(View.GONE);
+            noButton.setVisibility(View.GONE);
+        }
+
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

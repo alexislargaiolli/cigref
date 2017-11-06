@@ -19,6 +19,7 @@ import com.sherpa.mynelis.cigref.model.campaign.CampaignTypeModel;
 import com.sherpa.mynelis.cigref.view.MainActivity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +36,7 @@ public class EventByThemeFragment extends Fragment implements ThemeListFragment.
     private CampaignTypeModel currentTheme;
     private EventBytThemeRecyclerFragment eventBytThemeRecyclerFragment;
             ThemeListFragment themeListFragment;
+    Date today = new Date();
 
     public EventByThemeFragment() {
 
@@ -88,7 +90,7 @@ public class EventByThemeFragment extends Fragment implements ThemeListFragment.
     @Override
     public void onThemeSelect(CampaignTypeModel theme) {
         currentTheme = theme;
-        List<CampaignModel> campaigns = Stream.of(campaignViewModel.getCampaignsObservable().getValue()).filter(t -> t.getType().getIdNelis() == theme.getIdNelis()).toList();
+        List<CampaignModel> campaigns = Stream.of(campaignViewModel.getCampaignsObservable().getValue()).filter(t -> t.getClosedDate().after(today) && t.getType().getIdNelis() == theme.getIdNelis()).toList();
 //        mAdapter.setmDataset(campaigns);
 //        mAdapter.notifyDataSetChanged();
 //        themeListContainer.setVisibility(View.GONE);
