@@ -260,8 +260,8 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             placeContainerView.setVisibility(View.GONE);
         }
 
-        if (mEvent.getClosedDate() != null) {
-            eventDate.setText(DateFormat.getDateInstance().format(mEvent.getClosedDate()));
+        if (mEvent.getEventDate() != null) {
+            eventDate.setText(mEvent.getEventDate());
         } else {
             dateContainerView.setVisibility(View.GONE);
         }

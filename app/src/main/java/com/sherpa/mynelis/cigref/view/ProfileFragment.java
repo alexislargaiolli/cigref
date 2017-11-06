@@ -17,8 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.annimon.stream.Stream;
+import com.sherpa.mynelis.cigref.BuildConfig;
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
@@ -42,6 +44,7 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
     private CampaignEventAdpader mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private float bottomNavigationElevation;
+    private int disconnectLabelClickCount = 0;
 
     public ProfileFragment() {
 
@@ -107,6 +110,15 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
 
         campaignViewModel.getCampaignLoading().observe(this, loading -> {
             mySwipeRefreshLayout.setRefreshing(loading);
+        });
+
+        TextView disconnectLabel = view.findViewById(R.id.disconnectLabel);
+        TextView buildNumberLabel = view.findViewById(R.id.buildNumberLabel);
+        disconnectLabel.setOnClickListener(e -> {
+            disconnectLabelClickCount++;
+            if(disconnectLabelClickCount == 5){
+                buildNumberLabel.setText("Build " + BuildConfig.VERSION_NAME);
+            }
         });
 
         return view;

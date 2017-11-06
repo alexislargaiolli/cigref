@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.sherpa.mynelis.cigref.view.search.SearchFragment">
 
@@ -26,7 +28,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="center"
+            android:src="@drawable/search_not_found" />
 
         <TextView
             android:id="@+id/textView4"
@@ -54,6 +65,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="center"
+            android:src="@drawable/search_default" />
 
         <TextView
             android:id="@+id/textView3"

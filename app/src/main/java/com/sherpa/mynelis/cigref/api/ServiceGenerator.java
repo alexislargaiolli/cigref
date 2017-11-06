@@ -13,13 +13,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "https://sherpa.mynelis.com/";
-
     private static Gson gson = new GsonBuilder()
             .setDateFormat(NelisInterface.DATE_FORMAT)
             .create();
 
-    private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson));
+    private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(NelisInterface.API_ROOT).addConverterFactory(GsonConverterFactory.create(gson));
 
     private static Retrofit retrofit = builder.build();
 

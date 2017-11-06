@@ -108,10 +108,13 @@ public class SearchFragment extends Fragment {
         beforeSearchView.setVisibility(View.GONE);
         this.searchPattern = text;
         List<CampaignModel> results = null;
-        if(text != null && !text.isEmpty()) {
+        if(text != null && !text.isEmpty() && allCampaigns != null) {
              results = Stream.of(allCampaigns).filter(c -> {
-
-                return c.getTitle().toLowerCase().contains(text) || c.getType().getLabelFr().toLowerCase().contains(text);
+                return c.getTitle().toLowerCase().contains(text)
+                        || c.getType().getLabelFr().toLowerCase().contains(text)
+                        || (c.getDescription() != null ? c.getDescription().toLowerCase().contains(text) : false)
+                        || (c.getEventOrganizer() != null ? c.getEventOrganizer().toLowerCase().contains(text) : false)
+                        || (c.getEventPlace() != null ? c.getEventPlace().toLowerCase().contains(text) : false);
             }).toList();
         }
         else{

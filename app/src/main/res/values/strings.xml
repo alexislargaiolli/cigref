@@ -4,18 +4,14 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Identifiant</string>
     <string name="prompt_password">Mot de passe</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Connexion</string>
     <string name="action_sign_in_short">Connexion</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="error_invalid_email">Identifiant invalide</string>
+    <string name="error_incorrect_password">Identifiant invalide</string>
+    <string name="error_field_required">Identifiant requis</string>
+    <string name="error_password_required">Mot de passe requis</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_events">Événements</string>
     <string name="title_agenda">Agenda</string>
     <string name="title_profile">Mon profil</string>
