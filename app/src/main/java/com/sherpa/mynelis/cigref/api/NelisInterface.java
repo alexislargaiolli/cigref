@@ -27,7 +27,6 @@ public interface NelisInterface {
     String API_ROOT = "https://info.cigref.fr";
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-
     @FormUrlEncoded
     @POST("/oauth/access_token")
     Call<AccessToken> getToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret,

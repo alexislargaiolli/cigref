@@ -132,41 +132,33 @@ public class EventCampaignRepository {
     }
 
     public void changeInvitationStatus(final CampaignModel campaign, InvitationStatus status, Context context) {
-        // Keep previous state to restore it if update fail
-        final InvitationStatus previousStatus = campaign.getMyInvitation().getStatus();
-        //Apply change before making http update
-        final CampaignModel c = Stream.of(campaignModelList).filter(a -> a.getIdNelis() == campaign.getIdNelis()).findFirst().get();
-        c.getMyInvitation().setStatus(status);
-        if (InvitationStatus.ACCEPTED.equals(status)) {
-            c.addInvitation(c.getMyInvitation());
-        } else {
-            c.removeInvitation(c.getMyInvitation());
-        }
-        loadingError.setValue(null);
-        campaigns.setValue(campaignModelList);
-        EventCampaignService.getInstance().updateInvitationStatus(campaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
-            @Override
-            public void onSuccess(Invitation invitation) {
-                if (InvitationStatus.ACCEPTED.equals(invitation.getStatus())) {
-                    EventServices.showEventRegisterSuccessAlert(context, campaign);
+        if(campaign.getMyInvitation() != null) {
+            // Keep previous state to restore it if update fail
+            final InvitationStatus previousStatus = campaign.getMyInvitation().getStatus();
+            //Apply change before making http update
+            final CampaignModel c = Stream.of(campaignModelList).filter(a -> a.getIdNelis() == campaign.getIdNelis()).findFirst().get();
+            c.changeInvitationStatus(c.getMyInvitation().getId(), status);
+            loadingError.setValue(null);
+            campaigns.setValue(campaignModelList);
+            EventCampaignService.getInstance().updateInvitationStatus(campaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
+                @Override
+                public void onSuccess(Invitation invitation) {
+                    if (InvitationStatus.ACCEPTED.equals(invitation.getStatus())) {
+                        EventServices.showEventRegisterSuccessAlert(context, campaign);
+                    }
                 }
-            }
 
-            @Override
-            public void onError(ServiceReponseErrorType error, String errorMessage) {
-                // If fail, restore previous state
-                CampaignModel c = Stream.of(campaignModelList).filter(a -> a.getIdNelis() == campaign.getIdNelis()).findFirst().get();
-                c.getMyInvitation().setStatus(previousStatus);
-                if (InvitationStatus.ACCEPTED.equals(previousStatus)) {
-                    c.addInvitation(c.getMyInvitation());
-                } else {
-                    c.removeInvitation(c.getMyInvitation());
+                @Override
+                public void onError(ServiceReponseErrorType error, String errorMessage) {
+                    // If fail, restore previous state
+                    CampaignModel c = Stream.of(campaignModelList).filter(a -> a.getIdNelis() == campaign.getIdNelis()).findFirst().get();
+                    c.changeInvitationStatus(c.getMyInvitation().getId(), previousStatus);
+                    campaigns.setValue(campaignModelList);
+                    loadingError.setValue(ERROR_INVITATION_UPDATE_MESSAGE);
+                    loadingError.setValue(null);
                 }
-                campaigns.setValue(campaignModelList);
-                loadingError.setValue(ERROR_INVITATION_UPDATE_MESSAGE);
-                loadingError.setValue(null);
-            }
-        });
+            });
+        }
     }
 
     public MutableLiveData<Boolean> getCampaignLoading() {

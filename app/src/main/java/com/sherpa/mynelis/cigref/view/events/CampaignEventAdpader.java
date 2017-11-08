@@ -5,12 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
+import com.sherpa.mynelis.cigref.service.EventCampaignService;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,13 +67,13 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CampaignModel campaignModel = mDataset.get(position);
-        int guestCount = campaignModel.getInvitations() != null ? campaignModel.getInvitations().size() : 0;
-        initItem(holder.cardView, position, campaignModel.getTitle(), guestCount, campaignModel.getClosedDate(), campaignModel.getType().getLabelFr(), campaignModel.getMyInvitation());
+        initItem(holder.cardView, position, campaignModel.getIdNelis(), campaignModel.getTitle(), campaignModel.getGuestCount(), campaignModel.getClosedDate(), campaignModel.getType().getLabelFr(), campaignModel.getMyInvitation());
     }
 
-    private void initItem(View cardView, final int position, String eventName, int guestCount, Date eventDate, String eventType, Invitation myInvitation) {
+    private void initItem(View cardView, final int position, int campaignId, String eventName, long guestCount, Date eventDate, String eventType, Invitation myInvitation) {
         ImageButton yesButton = (ImageButton) cardView.findViewById(R.id.yesButton);
         ImageButton noButton = (ImageButton) cardView.findViewById(R.id.noButton);
+        ImageView poster = (ImageView) cardView.findViewById(R.id.poster);
         TextView eventTitleLabel = (TextView) cardView.findViewById(R.id.eventName);
         TextView eventGuestCountLabel = (TextView) cardView.findViewById(R.id.eventGuestCount);
         TextView eventMonthLabel = (TextView) cardView.findViewById(R.id.eventMonth);
@@ -83,6 +87,9 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         eventMonthLabel.setText(String.format(EVENT_MONTH_FORMAT, eventDate));
         eventDayLabel.setText(String.format(EVENT_DAY_FORMAT, eventDate));
         eventTypeLabel.setText(eventType);
+
+        String url = EventCampaignService.getInstance().buildEventPosterURL(campaignId);
+        Picasso.with(cardView.getContext().getApplicationContext()).load(url).fit().into(poster);
 
         if(eventDate.after(today)) {
 

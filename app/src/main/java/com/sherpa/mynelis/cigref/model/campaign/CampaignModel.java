@@ -3,6 +3,7 @@ package com.sherpa.mynelis.cigref.model.campaign;
 
 import android.util.Log;
 
+import com.annimon.stream.Stream;
 import com.google.gson.annotations.SerializedName;
 import com.sherpa.mynelis.cigref.model.common.Links;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
@@ -133,12 +134,31 @@ public class CampaignModel implements Serializable {
         return myInvitation != null ? myInvitation.getStatus() : InvitationStatus.NO_RESPONSE;
     }
 
-    public int getGuestCount(){
-        return invitations.size();
+    public long getGuestCount(){
+        return Stream.of(invitations).filter(invit -> InvitationStatus.ACCEPTED.equals(invit.getStatus()) ).count();
     }
 
-    public int getNegativeGuestCount(){
-        return invitations.size() * -1;
+    public List<Invitation> getAcceptedInvitations(){
+        return Stream.of(invitations).filter(invit -> InvitationStatus.ACCEPTED.equals(invit.getStatus())).toList();
+    }
+
+    /**
+     * Change the status of the invitation with a given id in the invitation list AND the myInvitation status if the given id matches
+     * @param invitationId
+     * @param status
+     */
+    public void changeInvitationStatus(int invitationId, InvitationStatus status){
+        Invitation invit = Stream.of(invitations).filter(i -> i.getId() == invitationId).findFirst().get();
+        if(invit != null) {
+            invit.setStatus(status);
+        }
+        if(myInvitation != null && myInvitation.getId() == invitationId){
+            myInvitation.setStatus(status);
+        }
+    }
+
+    public long getNegativeGuestCount(){
+        return getGuestCount() * -1;
     }
 
     /**

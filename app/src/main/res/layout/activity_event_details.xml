@@ -26,9 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 android:adjustViewBounds="true"
+                android:background="@drawable/forum"
                 android:contentDescription="@string/event_details_image_description"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
 
             <!-- MAIN INFORMATION -->
             <LinearLayout

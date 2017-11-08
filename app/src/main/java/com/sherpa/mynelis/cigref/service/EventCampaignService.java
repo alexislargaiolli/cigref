@@ -30,7 +30,8 @@ public class EventCampaignService {
 
     private static final String TAG = "EventCampaignService";
 
-
+    public static final String GET_EVENT_POSTER_ID_PARAM = "<id>";
+    public static final String GET_EVENT_POSTER_URL = "/api/v4/eventcampaigns/"+GET_EVENT_POSTER_ID_PARAM+"/images";
 
     private static EventCampaignService instance;
 
@@ -201,5 +202,10 @@ public class EventCampaignService {
             instance = new EventCampaignService();
         }
         return instance;
+    }
+
+    public String buildEventPosterURL(int campaignId){
+        String url = EventCampaignService.GET_EVENT_POSTER_URL.replace(EventCampaignService.GET_EVENT_POSTER_ID_PARAM, ""+campaignId);
+        return NelisInterface.API_ROOT + url + AuthenticationService.getInstance().getAccessTokenAsSufix();
     }
 }

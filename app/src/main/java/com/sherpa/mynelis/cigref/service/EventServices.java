@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 
 import com.sherpa.mynelis.cigref.R;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
@@ -32,8 +33,8 @@ public class EventServices {
 
         String formattedDate = DateFormat.getDateInstance().format(event.getClosedDate());
 
-        String contentPlain = context.getResources().getString(R.string.transfert_mail_content_plain);
-        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
+//        String contentPlain = context.getResources().getString(R.string.transfert_mail_content_plain);
+//        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
 
         String contentHTML = context.getResources().getString(R.string.transfert_mail_content_html);
         String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
@@ -41,8 +42,8 @@ public class EventServices {
         String title = context.getResources().getString(R.string.transfert_mail_title);
         String formattedTitle = String.format(title, event.getTitle());
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, formattedTitle);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, formattedContentPlain);
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(formattedContentHTML));
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, formattedContentPlain);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, formattedContentHTML);
         context.startActivity(Intent.createChooser(emailIntent, context.getResources().getString(R.string.transfert_mail_chooser)));
     }
 

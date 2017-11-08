@@ -30,6 +30,7 @@ import com.sherpa.mynelis.cigref.data.CampaignEventViewModel;
 import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
+import com.sherpa.mynelis.cigref.service.EventCampaignService;
 import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.service.UtilsService;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
@@ -57,6 +58,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private ImageButton notGoButton;
     private CampaignEventViewModel campaignViewModel;
     private Date today = new Date();
+    private boolean firstIgnored = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +69,15 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         mEvent = (CampaignModel) intent.getSerializableExtra(EVENT_ARGUMENT_KEY);
         EventsFragment frag = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.event_main_fragment);
         campaignViewModel = ViewModelProviders.of(this).get(CampaignEventViewModel.class);
+
+
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
-            this.updateInvitationInfo();
-            this.setRegisteredButtons();
+            if(firstIgnored) {
+                mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
+                this.updateInvitationInfo();
+                this.setRegisteredButtons();
+            }
+            firstIgnored = true;
         });
 
         EventCampaignRepository.getInstance().getLoadingError().observe(this, message -> {
@@ -115,7 +122,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
      */
     private void updateInvitationInfo() {
         TextView eventRegisteredCount = (TextView) findViewById(R.id.eventDetailsRegisteredCount);
-        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getInvitations().size()));
+        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getGuestCount()));
     }
 
     /**
@@ -125,18 +132,8 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         final ImageView eventImage = (ImageView) findViewById(R.id.eventDetailsImage);
         TextView eventTitle = (TextView) findViewById(R.id.eventDetailsTitle);
         TextView eventType = (TextView) findViewById(R.id.eventDetailsType);
-        System.out.println(mEvent.getPosterUrl());
-        Picasso.with(this).load(mEvent.getPosterUrl()).into(eventImage, new Callback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError() {
-                eventImage.setImageResource(R.drawable.forum);
-            }
-        });
+        String url = EventCampaignService.getInstance().buildEventPosterURL(mEvent.getIdNelis());
+        Picasso.with(this).load(url).fit().into(eventImage);
         eventTitle.setText(mEvent.getTitle());
         eventType.setText(mEvent.getType().getLabelFr());
     }
