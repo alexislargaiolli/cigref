@@ -31,6 +31,7 @@ import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
+import com.sherpa.mynelis.cigref.service.UtilsService;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -70,6 +71,12 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
             this.updateInvitationInfo();
             this.setRegisteredButtons();
+        });
+
+        EventCampaignRepository.getInstance().getLoadingError().observe(this, message -> {
+            if(message != null) {
+                UtilsService.showErrorAlert(this, message);
+            }
         });
 
         mMapView = (MapView) findViewById(R.id.mapView);

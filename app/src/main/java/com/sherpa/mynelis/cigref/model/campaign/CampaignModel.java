@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.annotations.SerializedName;
 import com.sherpa.mynelis.cigref.model.common.Links;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
+import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -126,6 +127,10 @@ public class CampaignModel implements Serializable {
             return null;
         }
         return links.getPosterUrl();
+    }
+
+    public InvitationStatus getInvitationStatus(){
+        return myInvitation != null ? myInvitation.getStatus() : InvitationStatus.NO_RESPONSE;
     }
 
     public int getGuestCount(){

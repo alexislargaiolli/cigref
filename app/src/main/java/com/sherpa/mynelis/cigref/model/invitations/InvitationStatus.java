@@ -13,7 +13,10 @@ public enum InvitationStatus implements Serializable {
     ACCEPTED("accepted"),
 
     @SerializedName("refused")
-    REFUSED("refused");
+    REFUSED("refused"),
+
+    @SerializedName("no_response")
+    NO_RESPONSE("no_response");
 
     private final String value;
 

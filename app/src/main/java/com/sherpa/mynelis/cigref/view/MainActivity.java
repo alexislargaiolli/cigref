@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.sherpa.mynelis.cigref.R;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
+import com.sherpa.mynelis.cigref.service.UtilsService;
 import com.sherpa.mynelis.cigref.utils.BottomNavigationViewHelper;
 import com.sherpa.mynelis.cigref.view.agenda.AgendaFragment;
 import com.sherpa.mynelis.cigref.view.events.EventsFragment;
@@ -54,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
+        EventCampaignRepository.getInstance().getLoadingError().observe(this, message -> {
+            if(message != null) {
+                UtilsService.showErrorAlert(this, message);
+            }
+        });
 
         changeFragment(new EventsFragment(), getResources().getString(R.string.title_events));
     }

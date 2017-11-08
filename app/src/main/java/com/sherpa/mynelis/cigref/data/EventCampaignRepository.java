@@ -22,6 +22,10 @@ import java.util.List;
  * Created by Alexis Largaiolli on 23/10/2017.
  */
 public class EventCampaignRepository {
+    private static final String ERROR_EVENT_MESSAGE = "Une erreur est survenue pendant la récupération des événements";
+    private static final String ERROR_INVITATIONS_MESSAGE = "Une erreur est survenue pendant la récupération des invitations";
+    private static final String ERROR_MY_INVITATION_MESSAGE = "Une erreur est survenue pendant la récupération de vos invitations";
+    private static final String ERROR_INVITATION_UPDATE_MESSAGE = "Une erreur est survenue pendant le traitement de votre invitation. Veuillez réessayer.";
     private static final EventCampaignRepository ourInstance = new EventCampaignRepository();
 
     public static EventCampaignRepository getInstance() {
@@ -29,6 +33,7 @@ public class EventCampaignRepository {
     }
 
     private MutableLiveData<Boolean> campaignLoading;
+    private MutableLiveData<String> loadingError;
     private MutableLiveData<List<CampaignModel>> campaigns;
     private MutableLiveData<CampaignTypeModel[]> themes;
     private List<CampaignModel> campaignModelList;
@@ -36,12 +41,14 @@ public class EventCampaignRepository {
     private EventCampaignRepository() {
         campaigns = new MutableLiveData<List<CampaignModel>>();
         campaignLoading = new MutableLiveData<Boolean>();
+        loadingError = new MutableLiveData<String>();
     }
 
     public MutableLiveData<List<CampaignModel>> fullLoad(boolean refresh) {
         if (campaignModelList != null && !refresh) {
             return campaigns;
         }
+        loadingError.setValue(null);
         campaignLoading.setValue(true);
         EventCampaignService.getInstance().getMyCampaigns(new ServiceResponse<List<CampaignModel>>() {
             @Override
@@ -67,7 +74,7 @@ public class EventCampaignRepository {
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                                campaignLoading.setValue(false);
+                                onFullLoadingError(ERROR_MY_INVITATION_MESSAGE);
                             }
                         });
                         EventCampaignService.getInstance().getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<List<Invitation>>() {
@@ -83,7 +90,7 @@ public class EventCampaignRepository {
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                                campaignLoading.setValue(false);
+                                onFullLoadingError(ERROR_INVITATIONS_MESSAGE);
                             }
                         });
                     }
@@ -92,10 +99,18 @@ public class EventCampaignRepository {
 
             @Override
             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                campaignLoading.setValue(false);
+                onFullLoadingError(ERROR_EVENT_MESSAGE);
             }
         });
         return campaigns;
+    }
+
+    private void onFullLoadingError(String message){
+        if(loadingError.getValue() == null) {
+            campaigns.setValue(new ArrayList<CampaignModel>());
+            campaignLoading.setValue(false);
+            loadingError.setValue(message);
+        }
     }
 
     public MutableLiveData<CampaignTypeModel[]> loadThemes(){
@@ -127,6 +142,7 @@ public class EventCampaignRepository {
         } else {
             c.removeInvitation(c.getMyInvitation());
         }
+        loadingError.setValue(null);
         campaigns.setValue(campaignModelList);
         EventCampaignService.getInstance().updateInvitationStatus(campaign.getMyInvitation().getId(), status, new ServiceResponse<Invitation>() {
             @Override
@@ -147,12 +163,18 @@ public class EventCampaignRepository {
                     c.removeInvitation(c.getMyInvitation());
                 }
                 campaigns.setValue(campaignModelList);
+                loadingError.setValue(ERROR_INVITATION_UPDATE_MESSAGE);
+                loadingError.setValue(null);
             }
         });
     }
 
     public MutableLiveData<Boolean> getCampaignLoading() {
         return campaignLoading;
+    }
+
+    public MutableLiveData<String> getLoadingError() {
+        return loadingError;
     }
 
     public void setCampaignLoading(MutableLiveData<Boolean> campaignLoading) {
