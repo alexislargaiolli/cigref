@@ -145,6 +145,8 @@ public class EventCampaignRepository {
                 public void onSuccess(Invitation invitation) {
                     if (InvitationStatus.ACCEPTED.equals(invitation.getStatus())) {
                         EventServices.showEventRegisterSuccessAlert(context, campaign);
+                    } else {
+                        EventServices.removeEventCalendar(context, campaign);
                     }
                 }
 

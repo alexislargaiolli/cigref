@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.sherpa.mynelis.cigref.R;
-import com.sherpa.mynelis.cigref.model.CigrefUser;
 import com.sherpa.mynelis.cigref.model.invitations.Invitation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -16,7 +15,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link CigrefUser} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a user avatar
  */
 public class ContactListRecyclerViewAdapter extends RecyclerView.Adapter<ContactListRecyclerViewAdapter.ViewHolder> {
 

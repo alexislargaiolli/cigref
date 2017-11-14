@@ -6,7 +6,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
-import com.sherpa.mynelis.cigref.model.Event;
 import com.sherpa.mynelis.cigref.model.campaign.CampaignModel;
 
 import java.util.ArrayList;

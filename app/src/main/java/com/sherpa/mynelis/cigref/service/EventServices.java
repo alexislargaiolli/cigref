@@ -1,11 +1,17 @@
 package com.sherpa.mynelis.cigref.service;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 
@@ -83,8 +89,29 @@ public class EventServices {
         context.startActivity(intent);
     }
 
+    public static void removeEventCalendar(Context context, CampaignModel event) {
+
+        int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+        if (PackageManager.PERMISSION_GRANTED == permissionCheck) {
+            ContentResolver cr = context.getContentResolver();
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.setTime(event.getClosedDate());
+            beginTime.add(Calendar.HOUR_OF_DAY, -1);
+            Calendar endTime = Calendar.getInstance();
+            endTime.setTime(event.getClosedDate());
+            endTime.add(Calendar.HOUR_OF_DAY, 2);
+
+//            String[] projection = new String[]{"EVENT_ID"};
+            String selection = "((" + CalendarContract.Events.DTSTART + " >= ? ) AND (" + CalendarContract.Events.DTSTART + " <= ? ) AND (" + CalendarContract.Events.TITLE + " = ?))";
+            String[] args = new String[]{beginTime.getTimeInMillis() + "", endTime.getTimeInMillis() + "", event.getTitle()};
+//            Cursor cur = cr.query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null);
+            cr.delete(CalendarContract.Events.CONTENT_URI, selection, args);
+        }
+    }
+
     /**
      * Show an dialog box after event register success to propose user to add event to phone calendar
+     *
      * @param context
      * @param event
      */
