@@ -39,6 +39,14 @@ public class Invitation implements Serializable {
                 '}';
     }
 
+    public boolean isAccepted(){
+        return InvitationStatus.ACCEPTED.equals(this.status);
+    }
+
+    public boolean isRefused(){
+        return InvitationStatus.REFUSED.equals(this.status);
+    }
+
     public int getId() {
         return id;
     }

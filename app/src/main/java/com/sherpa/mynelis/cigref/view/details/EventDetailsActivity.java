@@ -72,7 +72,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
 
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            if(firstIgnored) {
+            if (firstIgnored) {
                 mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
                 this.updateInvitationInfo();
                 this.setRegisteredButtons();
@@ -81,7 +81,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         });
 
         EventCampaignRepository.getInstance().getLoadingError().observe(this, message -> {
-            if(message != null) {
+            if (message != null) {
                 UtilsService.showErrorAlert(this, message);
             }
         });
@@ -157,7 +157,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         goButton = (ImageButton) findViewById(R.id.eventDetailsGo);
         notGoButton = (ImageButton) findViewById(R.id.eventDetailsNotGo);
 
-        if(mEvent.getClosedDate().after(today)) {
+        if (mEvent.getClosedDate().after(today)) {
             goButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -225,11 +225,10 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         mSeeMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(eventDescription.getMaxLines() == DESCRIPTION_COLLAPSED_MAX_LINE){
+                if (eventDescription.getMaxLines() == DESCRIPTION_COLLAPSED_MAX_LINE) {
                     eventDescription.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINE);
                     mSeeMore.setText(getString(R.string.general_see_less));
-                }
-                else{
+                } else {
                     eventDescription.setMaxLines(DESCRIPTION_COLLAPSED_MAX_LINE);
                     mSeeMore.setText(getString(R.string.general_see_more));
                 }
@@ -274,7 +273,8 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         }
 
         if (mEvent.getEventDate() != null) {
-            eventDate.setText(mEvent.getEventDate());
+            String date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(mEvent.getClosedDate());
+            eventDate.setText(date + " " + mEvent.getEventDate());
         } else {
             dateContainerView.setVisibility(View.GONE);
         }
@@ -294,7 +294,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             if (lines > 0) {
                 int ellipsisCount = layout.getEllipsisCount(lines - 1);
                 int maxLine = eventDescription.getMaxLines();
-                if(maxLine != DESCRIPTION_EXPANDED_MAX_LINE) {
+                if (maxLine != DESCRIPTION_EXPANDED_MAX_LINE) {
                     if (ellipsisCount > 0) {
                         mSeeMore.setVisibility(View.VISIBLE);
                     } else {

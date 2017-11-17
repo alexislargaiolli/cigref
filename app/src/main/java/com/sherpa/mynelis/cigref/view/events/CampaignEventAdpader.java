@@ -28,6 +28,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
     private static final String EVENT_DAY_FORMAT = "%1$td";
     private static final String EVENT_MONTH_FORMAT = "%1$tb";
     private static String GUEST_COUNT_FORMAT;
+    private static String ACCEPTED_GUEST_COUNT_FORMAT;
     private EventListener eventListener;
     private Date today = new Date();
 
@@ -59,6 +60,8 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         View v = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_view, parent, false);
         // set the view's size, margins, paddings and layout parameters
         GUEST_COUNT_FORMAT = parent.getContext().getResources().getString(R.string.event_guest_count);
+        ACCEPTED_GUEST_COUNT_FORMAT = parent.getContext().getResources().getString(R.string.event_accepted_guest_count);
+
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -83,7 +86,12 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
 
         // Set label text values
         eventTitleLabel.setText(eventName);
-        eventGuestCountLabel.setText(String.format(GUEST_COUNT_FORMAT, guestCount));
+        if (myInvitation != null && (myInvitation.isAccepted() || myInvitation.isRefused())) {
+            eventGuestCountLabel.setText(String.format(ACCEPTED_GUEST_COUNT_FORMAT, guestCount));
+        } else {
+            eventGuestCountLabel.setText(String.format(GUEST_COUNT_FORMAT, guestCount));
+        }
+
         eventMonthLabel.setText(String.format(EVENT_MONTH_FORMAT, eventDate));
         eventDayLabel.setText(String.format(EVENT_DAY_FORMAT, eventDate));
         eventTypeLabel.setText(eventType);
@@ -91,7 +99,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
         String url = EventCampaignService.getInstance().buildEventPosterURL(campaignId);
         Picasso.with(cardView.getContext().getApplicationContext()).load(url).fit().into(poster);
 
-        if(eventDate.after(today)) {
+        if (eventDate.after(today)) {
 
             // Set yes / no button status
             yesButton.setVisibility(View.VISIBLE);
@@ -130,7 +138,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
      * Handler call after invitation has been accept or refused
      *
      * @param position index of the event in the dataset
-     * @param status new status of the invitation
+     * @param status   new status of the invitation
      */
     private void onChangeInvitationStatus(int position, InvitationStatus status) {
         if (eventListener != null) {
