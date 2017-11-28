@@ -7,6 +7,7 @@ import com.sherpa.mynelis.cigref.api.AccessToken;
 import com.sherpa.mynelis.cigref.api.NelisInterface;
 import com.sherpa.mynelis.cigref.api.ServiceGenerator;
 import com.sherpa.mynelis.cigref.api.exception.LoginTimeout;
+import com.sherpa.mynelis.cigref.data.EventCampaignRepository;
 import com.sherpa.mynelis.cigref.model.Credentials;
 import com.yakivmospan.scytale.Crypto;
 import com.yakivmospan.scytale.Options;

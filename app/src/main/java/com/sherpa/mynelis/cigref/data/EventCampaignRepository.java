@@ -50,6 +50,8 @@ public class EventCampaignRepository {
         }
         loadingError.setValue(null);
         campaignLoading.setValue(true);
+        // Add error raised in a list to check if an error as already be raised, we cannot use a final boolean
+        List<String> errors = new ArrayList<String>();
         EventCampaignService.getInstance().getMyCampaigns(new ServiceResponse<List<CampaignModel>>() {
             @Override
             public void onSuccess(List<CampaignModel> datas) {
@@ -74,7 +76,10 @@ public class EventCampaignRepository {
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                                onFullLoadingError(ERROR_MY_INVITATION_MESSAGE);
+                                if (!errors.isEmpty()) {
+                                    errors.add(ERROR_MY_INVITATION_MESSAGE);
+                                    onFullLoadingError(ERROR_MY_INVITATION_MESSAGE);
+                                }
                             }
                         });
                         EventCampaignService.getInstance().getCampaignInvitations(campaign.getIdNelis(), new ServiceResponse<List<Invitation>>() {
@@ -90,7 +95,10 @@ public class EventCampaignRepository {
 
                             @Override
                             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                                onFullLoadingError(ERROR_INVITATIONS_MESSAGE);
+                                if (!errors.isEmpty()) {
+                                    errors.add(ERROR_MY_INVITATION_MESSAGE);
+                                    onFullLoadingError(ERROR_INVITATIONS_MESSAGE);
+                                }
                             }
                         });
                     }
@@ -99,26 +107,34 @@ public class EventCampaignRepository {
 
             @Override
             public void onError(ServiceReponseErrorType error, String errorMessage) {
-                onFullLoadingError(ERROR_EVENT_MESSAGE);
+                if (!errors.isEmpty()) {
+                    errors.add(ERROR_MY_INVITATION_MESSAGE);
+                    onFullLoadingError(ERROR_EVENT_MESSAGE);
+                }
             }
         });
         return campaigns;
     }
 
-    private void onFullLoadingError(String message){
-        if(loadingError.getValue() == null) {
+    private void onFullLoadingError(String message) {
+        if (loadingError.getValue() == null) {
             campaigns.setValue(new ArrayList<CampaignModel>());
             campaignLoading.setValue(false);
             loadingError.setValue(message);
+            loadingError.setValue(null);
         }
     }
 
-    public MutableLiveData<CampaignTypeModel[]> loadThemes(){
+    public void clearError() {
+        loadingError.setValue(null);
+    }
+
+    public MutableLiveData<CampaignTypeModel[]> loadThemes() {
         themes = new MutableLiveData<CampaignTypeModel[]>();
         EventCampaignService.getInstance().getCampaignTypeList(new ServiceResponse<CampaignTypeListModel>() {
             @Override
             public void onSuccess(CampaignTypeListModel datas) {
-                if(datas != null && datas.getTypes() != null){
+                if (datas != null && datas.getTypes() != null) {
                     themes.setValue(datas.getTypes());
                 }
             }
@@ -132,7 +148,7 @@ public class EventCampaignRepository {
     }
 
     public void changeInvitationStatus(final CampaignModel campaign, InvitationStatus status, Context context) {
-        if(campaign.getMyInvitation() != null) {
+        if (campaign.getMyInvitation() != null) {
             // Keep previous state to restore it if update fail
             final InvitationStatus previousStatus = campaign.getMyInvitation().getStatus();
             //Apply change before making http update
