@@ -2,6 +2,7 @@ package com.sherpa.mynelis.cigref.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sherpa.mynelis.cigref.service.AuthenticationInterceptor;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -23,11 +24,14 @@ public class ServiceGenerator {
 
     private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
+    private static AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor();
+
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     private static <S> S createService(Class<S> serviceClass) {
         if (!httpClient.interceptors().contains(logging)) {
             httpClient.addInterceptor(logging);
+            httpClient.addInterceptor(authInterceptor);
             builder.client(httpClient.build());
             retrofit = builder.build();
         }

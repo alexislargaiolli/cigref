@@ -33,6 +33,11 @@ public interface NelisInterface {
                                @Field("grant_type") String grantType, @Field("username") String username,
                                @Field("password") String password);
 
+    @FormUrlEncoded
+    @POST("/oauth/refresh_token")
+    Call<AccessToken> refreshToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret,
+                               @Field("grant_type") String grantType, @Field("refresh_token") String refreshToken);
+
 
     @GET("/api/v4/eventcampaigns/me/invited")
     Call<List<CampaignModel>> getMyCampaigns(@Query("access_token") String accessToken);

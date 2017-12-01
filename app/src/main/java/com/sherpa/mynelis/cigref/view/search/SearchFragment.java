@@ -27,6 +27,7 @@ import com.sherpa.mynelis.cigref.service.EventServices;
 import com.sherpa.mynelis.cigref.view.events.CampaignEventAdpader;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -40,10 +41,12 @@ public class SearchFragment extends Fragment {
     private String searchPattern;
     private LinearLayout noResultView;
     private LinearLayout beforeSearchView;
-    Date today = new Date();
+    Date today;
 
     public SearchFragment() {
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -6);
+        today = calendar.getTime();
     }
 
 

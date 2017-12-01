@@ -146,6 +146,7 @@ public class EventCampaignService {
 
             @Override
             public void onFailure(Call<Invitation> call, Throwable t) {
+
                 responseEvent.onError(ServiceResponse.ServiceReponseErrorType.NETWORK, t.getMessage());
             }
         });

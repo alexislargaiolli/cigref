@@ -23,6 +23,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,10 +43,12 @@ public class EventBytThemeRecyclerFragment extends Fragment {
     private CampaignEventViewModel campaignViewModel;
     private TextView selectedThemeTitle;
     private TextView emptyMessage;
-    private Date today = new Date();
+    private Date today;
 
     public EventBytThemeRecyclerFragment() {
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -6);
+        today = calendar.getTime();
     }
 
     /**

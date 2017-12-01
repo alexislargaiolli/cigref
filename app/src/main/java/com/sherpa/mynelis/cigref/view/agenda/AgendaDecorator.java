@@ -36,13 +36,17 @@ public class AgendaDecorator implements DayViewDecorator {
         view.addSpan(new DotSpan(5, Color.RED));
     }
 
+    public void clearEvents(){
+        eventsByDate.clear();
+    }
+
     public void addEvent(Date date, CampaignModel event){
         CalendarDay day = CalendarDay.from(date);
         ArrayList events = eventsByDate.get(day);
         if(events == null){
             events = new ArrayList();
         }
-        if(!events.contains(events)){
+        if(!events.contains(event)){
             events.add(event);
         }
         eventsByDate.put(day, events);

@@ -52,7 +52,8 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:paddingStart="50dp"
-                        android:text="@string/event_guest_count" />
+                        android:text="@string/event_guest_count"
+                        android:textSize="16sp" />
 
                     <ImageButton
                         android:id="@+id/noButton"
@@ -94,7 +95,7 @@
                             android:text="Oct"
                             android:textAlignment="center"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/eventDay"
@@ -119,7 +120,7 @@
                             android:layout_height="20dp"
                             android:layout_weight="1"
                             android:text="Conférence CIGREF"
-                            android:textSize="12sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/eventName"

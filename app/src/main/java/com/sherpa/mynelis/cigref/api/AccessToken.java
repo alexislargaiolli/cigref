@@ -3,6 +3,9 @@ package com.sherpa.mynelis.cigref.api;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class AccessToken {
 
@@ -17,6 +20,8 @@ public class AccessToken {
     @SerializedName("refresh_token")
     private String refreshToken;
 
+    private Date createdAt;
+    private Date needRefreshAt;
 
     public AccessToken() {
         this("", "", 0, 0, "");
@@ -28,6 +33,18 @@ public class AccessToken {
         this.expires = expires;
         this.expiresIn = expiresIn;
         this.refreshToken = refreshToken;
+    }
+
+    public void init(){
+        createdAt = new Date();
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.SECOND, expiresIn - 500);
+        needRefreshAt = c.getTime();
+    }
+
+    public boolean needRefresh(){
+        Date now = new Date();
+        return now.after(this.needRefreshAt);
     }
 
     /* Getters & setters */

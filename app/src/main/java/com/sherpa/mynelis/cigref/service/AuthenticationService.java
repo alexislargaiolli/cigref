@@ -17,6 +17,8 @@ import java.io.IOException;
 import javax.crypto.SecretKey;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Alexis Largaiolli on 19/10/17.
@@ -31,6 +33,7 @@ public class AuthenticationService {
 
     private static AuthenticationService instance;
     private AccessToken mToken;
+    private boolean refreshing;
 
     private AuthenticationService() {
 
@@ -41,10 +44,32 @@ public class AuthenticationService {
         Call<AccessToken> call = client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, password);
         try {
             mToken = call.execute().body();
+            mToken.init();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return mToken != null;
+    }
+
+    public void refreshToken() {
+        if(!refreshing) {
+            refreshing = true;
+            NelisInterface client = ServiceGenerator.createNelisClient();
+            Call<AccessToken> call = client.refreshToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "refresh_token", getmToken().getRefreshToken());
+            call.enqueue(new Callback<AccessToken>() {
+                @Override
+                public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                    mToken = response.body();
+                    mToken.init();
+                    refreshing = false;
+                }
+
+                @Override
+                public void onFailure(Call<AccessToken> call, Throwable t) {
+                    refreshing = false;
+                }
+            });
+        }
     }
 
     public void logout(Context context) {

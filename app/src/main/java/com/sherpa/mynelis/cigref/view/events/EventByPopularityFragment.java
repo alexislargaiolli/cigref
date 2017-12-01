@@ -21,6 +21,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +64,9 @@ public class EventByPopularityFragment extends Fragment {
             }
         });
 
-        Date today = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -6);
+        Date today = calendar.getTime();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             if (campaignModels.isEmpty()) {

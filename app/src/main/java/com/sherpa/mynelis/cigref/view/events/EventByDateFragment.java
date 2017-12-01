@@ -22,6 +22,7 @@ import com.sherpa.mynelis.cigref.model.invitations.InvitationStatus;
 import com.sherpa.mynelis.cigref.service.EventServices;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +65,10 @@ public class EventByDateFragment extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
-        Date today = new Date();
+        // Compare event date with today minus 6 hours to display current event
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, -6);
+        Date today = calendar.getTime();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             if (campaignModels.isEmpty()) {
