@@ -41,15 +41,16 @@ public class EventServices {
 
 //        String contentPlain = context.getResources().getString(R.string.transfert_mail_content_plain);
 //        String formattedContentPlain = String.format(contentPlain, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
-
         String contentHTML = context.getResources().getString(R.string.transfert_mail_content_html);
         String formattedContentHTML = String.format(contentHTML, event.getTitle(), event.getDescription(), event.getEventPlace(), formattedDate);
 
         String title = context.getResources().getString(R.string.transfert_mail_title);
         String formattedTitle = String.format(title, event.getTitle());
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, formattedTitle);
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, formattedContentPlain);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, formattedContentHTML);
+
+//        emailIntent.setType("text/html");
+//        emailIntent.setType("message/rfc822");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(formattedContentHTML));
         context.startActivity(Intent.createChooser(emailIntent, context.getResources().getString(R.string.transfert_mail_chooser)));
     }
 

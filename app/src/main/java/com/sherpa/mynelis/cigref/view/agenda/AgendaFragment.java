@@ -94,7 +94,7 @@ public class AgendaFragment extends Fragment implements MainActivity.BackNavitat
 
     private void initRecycler(View view, ViewGroup container){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.event_recycler_view_agenda);
-        mRecyclerView.setNestedScrollingEnabled(false);
+//        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(container.getContext());
