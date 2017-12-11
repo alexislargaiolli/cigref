@@ -47,7 +47,7 @@ public class ContactListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-            ContactListRecyclerViewAdapter adapter = new ContactListRecyclerViewAdapter(mEvent.getInvitations(), getContext());
+            ContactListRecyclerViewAdapter adapter = new ContactListRecyclerViewAdapter(mEvent.getAcceptedInvitations(), getContext());
             recyclerView.setAdapter(adapter);
             campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
                 mEvent = Stream.of(campaignModels).filter(a -> a.getIdNelis() == mEvent.getIdNelis()).findFirst().get();
@@ -60,6 +60,6 @@ public class ContactListFragment extends Fragment {
 
     public void updateContactList(RecyclerView recyclerView){
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new ContactListRecyclerViewAdapter(mEvent.getInvitations(), getContext()));
+        recyclerView.setAdapter(new ContactListRecyclerViewAdapter(mEvent.getAcceptedInvitations(), getContext()));
     }
 }

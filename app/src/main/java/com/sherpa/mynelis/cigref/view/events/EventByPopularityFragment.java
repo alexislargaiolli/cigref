@@ -66,15 +66,15 @@ public class EventByPopularityFragment extends Fragment {
         Date today = new Date();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            if (campaignModels.isEmpty()) {
+            List<CampaignModel> campaigns = Stream.of(campaignModels).filter(c-> c.getClosedDate().after(today)).toList();
+            if (campaigns.isEmpty()) {
                 emptyMessage.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.GONE);
             } else {
                 emptyMessage.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 List<CampaignModel> sortedCampaigns =
-                        Stream.of(campaignModels)
-                                .filter(c-> c.getClosedDate().after(today))
+                        Stream.of(campaigns)
                                 .sortBy(CampaignModel::getNegativeGuestCount)
                                 .toList();
                 mAdapter.setmDataset(sortedCampaigns);

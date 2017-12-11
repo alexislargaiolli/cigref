@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment implements MainActivity.BackNavita
         Date today = new Date();
         campaignViewModel = ViewModelProviders.of(getActivity()).get(CampaignEventViewModel.class);
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
-            List<CampaignModel> acceptedCampaigns = Stream.of(campaignModels).filter(c-> c.getClosedDate().after(today) && InvitationStatus.ACCEPTED.equals(c.getMyInvitation().getStatus())).toList();
+            List<CampaignModel> acceptedCampaigns = Stream.of(campaignModels).filter(c-> c.getClosedDate().after(today) && c.isAccepted()).toList();
             mAdapter.setmDataset(acceptedCampaigns);
             mAdapter.notifyDataSetChanged();
         });

@@ -22,6 +22,8 @@ import java.util.List;
 public class CampaignEventViewModel extends ViewModel {
 
     MutableLiveData<Boolean> campaignLoading;
+    MutableLiveData<Boolean> invitationsLoading;
+    MutableLiveData<String> loadingError;
 
     MutableLiveData<List<CampaignModel>> campaignsObservable;
 
@@ -44,10 +46,24 @@ public class CampaignEventViewModel extends ViewModel {
         return campaignsObservable;
     }
 
-    public MutableLiveData<Boolean> getCampaignLoading() {
+    public LiveData<String> getLoadingError() {
+        if(loadingError == null){
+            loadingError = EventCampaignRepository.getInstance().getLoadingError();
+        }
+        return loadingError;
+    }
+
+    public LiveData<Boolean> getCampaignLoading() {
         if(campaignLoading == null){
             campaignLoading = EventCampaignRepository.getInstance().getCampaignLoading();
         }
         return campaignLoading;
+    }
+
+    public LiveData<Boolean> getInvitationLoading() {
+        if(invitationsLoading == null){
+            invitationsLoading = EventCampaignRepository.getInstance().getInvitationLoading();
+        }
+        return invitationsLoading;
     }
 }

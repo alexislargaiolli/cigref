@@ -63,7 +63,18 @@ public class CampaignModel implements Serializable {
     @SerializedName("entity_type")
     private String entityType;
 
+    @SerializedName("guests_count")
+    private int guestsCount;
+
+    @SerializedName("confirmed_count")
+    private int confirmedCount;
+
+    @SerializedName("my_status")
+    private InvitationStatus myStatus;
+
     private Invitation myInvitation;
+
+    private boolean invitationLoaded;
 
     private List<Invitation> invitations = new ArrayList<>();
 
@@ -135,7 +146,7 @@ public class CampaignModel implements Serializable {
     }
 
     public long getGuestCount(){
-        return Stream.of(invitations).filter(invit -> InvitationStatus.ACCEPTED.equals(invit.getStatus()) ).count();
+        return this.guestsCount;
     }
 
     public List<Invitation> getAcceptedInvitations(){
@@ -143,22 +154,43 @@ public class CampaignModel implements Serializable {
     }
 
     /**
-     * Change the status of the invitation with a given id in the invitation list AND the myInvitation status if the given id matches
-     * @param invitationId
+     * Change the current user invitation status of the campaign
      * @param status
      */
-    public void changeInvitationStatus(int invitationId, InvitationStatus status){
-        Invitation invit = Stream.of(invitations).filter(i -> i.getId() == invitationId).findFirst().get();
-        if(invit != null) {
-            invit.setStatus(status);
+    public void changeInvitationStatus(InvitationStatus status){
+        if(isRefused()){
+            if(InvitationStatus.ACCEPTED.equals(status)){
+                this.confirmedCount++;
+            }
+        } else if (isAccepted()){
+            if(InvitationStatus.REFUSED.equals(status) || InvitationStatus.NO_RESPONSE.equals(status)){
+                this.confirmedCount--;
+            }
+        } else {
+            if(InvitationStatus.ACCEPTED.equals(status)){
+                this.confirmedCount++;
+            }
         }
-        if(myInvitation != null && myInvitation.getId() == invitationId){
-            myInvitation.setStatus(status);
-        }
+        myStatus = status;
+//        Invitation invit = Stream.of(invitations).filter(i -> i.getId() == invitationId).findFirst().get();
+//        if(invit != null) {
+//            invit.setStatus(status);
+//        }
+//        if(myInvitation != null && myInvitation.getId() == invitationId){
+//            myInvitation.setStatus(status);
+//        }
+    }
+
+    public boolean isAccepted(){
+        return InvitationStatus.ACCEPTED.equals(this.myStatus);
+    }
+
+    public boolean isRefused(){
+        return InvitationStatus.REFUSED.equals(this.myStatus);
     }
 
     public long getNegativeGuestCount(){
-        return getGuestCount() * -1;
+        return getConfirmedCount() * -1;
     }
 
     /**
@@ -347,5 +379,29 @@ public class CampaignModel implements Serializable {
 
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
+    }
+
+    public InvitationStatus getMyStatus() {
+        return myStatus;
+    }
+
+    public void setMyStatus(InvitationStatus myStatus) {
+        this.myStatus = myStatus;
+    }
+
+    public boolean isInvitationLoaded() {
+        return invitationLoaded;
+    }
+
+    public void setInvitationLoaded(boolean invitationLoaded) {
+        this.invitationLoaded = invitationLoaded;
+    }
+
+    public int getConfirmedCount() {
+        return confirmedCount;
+    }
+
+    public void setConfirmedCount(int confirmedCount) {
+        this.confirmedCount = confirmedCount;
     }
 }

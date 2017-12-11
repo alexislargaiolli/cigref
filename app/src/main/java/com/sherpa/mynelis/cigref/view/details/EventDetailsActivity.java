@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -57,6 +58,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
     private ImageButton goButton;
     private ImageButton notGoButton;
     private CampaignEventViewModel campaignViewModel;
+    private ProgressBar invitationLoadingStatus;
     private Date today = new Date();
     private boolean firstIgnored = false;
 
@@ -69,7 +71,13 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         mEvent = (CampaignModel) intent.getSerializableExtra(EVENT_ARGUMENT_KEY);
         EventsFragment frag = (EventsFragment) getSupportFragmentManager().findFragmentById(R.id.event_main_fragment);
         campaignViewModel = ViewModelProviders.of(this).get(CampaignEventViewModel.class);
+        this.invitationLoadingStatus = (ProgressBar) findViewById(R.id.invitationLoadingStatus);
 
+        if(!mEvent.isInvitationLoaded()){
+            EventCampaignRepository.getInstance().loadInvitations(mEvent);
+        } else{
+            this.invitationLoadingStatus.setVisibility(View.GONE);
+        }
 
         campaignViewModel.getCampaignsObservable().observe(this, campaignModels -> {
             if (firstIgnored) {
@@ -80,7 +88,16 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
             firstIgnored = true;
         });
 
-        EventCampaignRepository.getInstance().getLoadingError().observe(this, message -> {
+
+        campaignViewModel.getInvitationLoading().observe(this, loading ->{
+            if(loading){
+                this.invitationLoadingStatus.setVisibility(View.VISIBLE);
+            } else {
+                this.invitationLoadingStatus.setVisibility(View.GONE);
+            }
+        });
+
+        campaignViewModel.getLoadingError().observe(this, message -> {
             if (message != null) {
                 UtilsService.showErrorAlert(this, message);
             }
@@ -122,7 +139,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
      */
     private void updateInvitationInfo() {
         TextView eventRegisteredCount = (TextView) findViewById(R.id.eventDetailsRegisteredCount);
-        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getGuestCount()));
+        eventRegisteredCount.setText(getString(R.string.event_details_participant_count, mEvent.getConfirmedCount()));
     }
 
     /**
@@ -172,7 +189,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
                 }
             });
 
-            if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.ACCEPTED)) {
+            if (mEvent.isAccepted()) {
                 goButton.setSelected(true);
                 notGoButton.setSelected(false);
                 eventIsRegistered.setText(getString(R.string.event_details_you_are_registered));
@@ -180,7 +197,7 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
                 goButton.setSelected(false);
                 notGoButton.setSelected(false);
                 eventIsRegistered.setText(getString(R.string.event_details_are_you_going));
-                if (mEvent.getMyInvitation().getStatus().equals(InvitationStatus.REFUSED)) {
+                if (mEvent.isRefused()) {
                     notGoButton.setSelected(true);
                 }
             }

@@ -15,8 +15,8 @@ public enum InvitationStatus implements Serializable {
     @SerializedName("refused")
     REFUSED("refused"),
 
-    @SerializedName("no_response")
-    NO_RESPONSE("no_response");
+    @SerializedName("not_answered")
+    NO_RESPONSE("not_answered");
 
     private final String value;
 
@@ -26,5 +26,17 @@ public enum InvitationStatus implements Serializable {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isAccepted(){
+        return InvitationStatus.ACCEPTED.equals(this);
+    }
+
+    public boolean isRefused(){
+        return InvitationStatus.REFUSED.equals(this);
+    }
+
+    public boolean isNoResponse(){
+        return InvitationStatus.NO_RESPONSE.equals(this);
     }
 }

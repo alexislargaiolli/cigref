@@ -74,10 +74,9 @@ public class EventServices {
      */
     public static void addEventToCalendar(Context context, CampaignModel event) throws SecurityException {
         Calendar beginTime = Calendar.getInstance();
-        beginTime.setTime(event.getClosedDate());
+        beginTime.setTime(event.getStartDate());
         Calendar endTime = Calendar.getInstance();
         endTime.setTime(event.getClosedDate());
-        endTime.add(Calendar.HOUR_OF_DAY, 1);
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
@@ -95,11 +94,11 @@ public class EventServices {
         if (PackageManager.PERMISSION_GRANTED == permissionCheck) {
             ContentResolver cr = context.getContentResolver();
             Calendar beginTime = Calendar.getInstance();
-            beginTime.setTime(event.getClosedDate());
+            beginTime.setTime(event.getStartDate());
             beginTime.add(Calendar.HOUR_OF_DAY, -1);
             Calendar endTime = Calendar.getInstance();
             endTime.setTime(event.getClosedDate());
-            endTime.add(Calendar.HOUR_OF_DAY, 2);
+            endTime.add(Calendar.HOUR_OF_DAY, 1);
 
 //            String[] projection = new String[]{"EVENT_ID"};
             String selection = "((" + CalendarContract.Events.DTSTART + " >= ? ) AND (" + CalendarContract.Events.DTSTART + " <= ? ) AND (" + CalendarContract.Events.TITLE + " = ?))";

@@ -70,10 +70,10 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CampaignModel campaignModel = mDataset.get(position);
-        initItem(holder.cardView, position, campaignModel.getIdNelis(), campaignModel.getTitle(), campaignModel.getGuestCount(), campaignModel.getClosedDate(), campaignModel.getType().getLabelFr(), campaignModel.getMyInvitation());
+        initItem(holder.cardView, position, campaignModel.getIdNelis(), campaignModel.getTitle(), campaignModel.getConfirmedCount(), campaignModel.getClosedDate(), campaignModel.getType().getLabelFr(), campaignModel.getMyStatus());
     }
 
-    private void initItem(View cardView, final int position, int campaignId, String eventName, long guestCount, Date eventDate, String eventType, Invitation myInvitation) {
+    private void initItem(View cardView, final int position, int campaignId, String eventName, long guestCount, Date eventDate, String eventType, InvitationStatus myInvitationStatus) {
         ImageButton yesButton = (ImageButton) cardView.findViewById(R.id.yesButton);
         ImageButton noButton = (ImageButton) cardView.findViewById(R.id.noButton);
         ImageView poster = (ImageView) cardView.findViewById(R.id.poster);
@@ -86,7 +86,7 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
 
         // Set label text values
         eventTitleLabel.setText(eventName);
-        if (myInvitation != null && (myInvitation.isAccepted() || myInvitation.isRefused())) {
+        if (myInvitationStatus.isAccepted() || myInvitationStatus.isRefused()) {
             eventGuestCountLabel.setText(String.format(ACCEPTED_GUEST_COUNT_FORMAT, guestCount));
         } else {
             eventGuestCountLabel.setText(String.format(GUEST_COUNT_FORMAT, guestCount));
@@ -104,8 +104,8 @@ public class CampaignEventAdpader extends RecyclerView.Adapter<CampaignEventAdpa
             // Set yes / no button status
             yesButton.setVisibility(View.VISIBLE);
             noButton.setVisibility(View.VISIBLE);
-            yesButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.ACCEPTED);
-            noButton.setSelected(myInvitation != null && myInvitation.getStatus() == InvitationStatus.REFUSED);
+            yesButton.setSelected(myInvitationStatus.isAccepted());
+            noButton.setSelected(myInvitationStatus.isRefused());
 
             // Attach listener to buttons
             noButton.setOnClickListener(new View.OnClickListener() {
