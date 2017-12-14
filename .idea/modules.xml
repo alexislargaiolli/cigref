@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Cigref.iml" filepath="$PROJECT_DIR$/Cigref.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/cigref.iml" filepath="$PROJECT_DIR$/cigref.iml" />
       <module fileurl="file://$PROJECT_DIR$/cigref-app-android.iml" filepath="$PROJECT_DIR$/cigref-app-android.iml" />

@@ -45,7 +45,9 @@ public class AuthenticationService {
         Call<AccessToken> call = client.getToken(NelisInterface.CLIENT_ID, NelisInterface.CLIENT_SECRET, "password", username, password);
         try {
             mToken = call.execute().body();
-            mToken.init();
+            if(mToken != null) {
+                mToken.init();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
